@@ -2,9 +2,9 @@
     <base-modal @close="$emit('close')">
       <p class="approach-form__title">Жим лёжа</p>
       <label for="" class="approach-form__label">Повторения
-        <input v-model="approachData.reps" class="approach-form__input"></label>
+        <input type="number" v-model="approachData.reps" class="approach-form__input"></label>
       <label for="" class="approach-form__label">Вес
-        <input v-model="approachData.weight" class="approach-form__input"></label>
+        <input type="number" v-model="approachData.weight" class="approach-form__input"></label>
 
       <div class="approach-form__btns">
         <button class="approach-form__btn" @click="saveApproach">Сохранить</button>
@@ -23,8 +23,8 @@ export default {
   },
   data() {
     return {
-      reps: '',
-      weight: '',
+      reps: null,
+      weight: null,
       isNewApproach: true,
       exerciseIndex: null,
       approachIndex: null,
@@ -55,8 +55,8 @@ export default {
     },
 
     clearForm() {
-      this.reps = '';
-      this.weight = '';
+      this.reps = null;
+      this.weight = null;
     },
 
     loadApproachData() {
@@ -66,10 +66,6 @@ export default {
 
     saveApproach() {
       // Логика сохранения нового подхода
-      const approach = {
-        reps: this.reps,
-        weight: this.weight
-      };
       if (this.isNewApproach) {
         const approach = {
           reps: this.approachData.reps,

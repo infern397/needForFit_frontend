@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/axios';
 import { mapActions, mapGetters } from 'vuex';
 import WorkoutModal from "@/components/modals/WorkoutModal";
 
@@ -123,7 +123,7 @@ export default {
       } else {
         this.expandedWorkoutId = id
         axios
-            .get(`http://127.0.0.1:8000/api/approaches/${id}`)
+            .get(`approaches/${id}`)
             .then(res => {
               this.expandedWorkout = res.data;
             })

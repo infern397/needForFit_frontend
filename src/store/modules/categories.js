@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from '@/axios';
+
 
 export default {
     state: {
@@ -23,7 +24,7 @@ export default {
     },
     actions: {
         fetchCategories({ commit }) {
-            return axios.get('http://127.0.0.1:8000/api/workouts/types/')
+            return axios.get(`http://127.0.0.1:8000/api/workouts/types/${localStorage.getItem('uid')}`)
                 .then(response => {
                     commit('SET_CATEGORIES', response.data);
                 });

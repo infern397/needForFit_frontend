@@ -3,6 +3,8 @@ import WorkoutsPage from "@/pages/WorkoutsPage";
 import WorkoutPage from "@/pages/WorkoutPage";
 import ExercisesPage from "@/pages/ExercisesPage";
 import AccountPage from "@/pages/AccountPage";
+import LoginPage from "@/pages/LoginPage";
+import RegistrationPage from "@/pages/RegistrationPage";
 
 const routes = [
   {
@@ -24,6 +26,16 @@ const routes = [
     path: '/account/:id',
     name: 'account',
     component: AccountPage
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginPage
+  },
+  {
+    path: '/registration',
+    name: 'registration',
+    component: RegistrationPage
   },
 ]
 

@@ -24,8 +24,12 @@
             <li class="header__nav-list-item"><a href="" class="header__nav-link">Связь</a></li>
           </ul>
         </nav>
-        <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
-          <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
+        <div class="header__right">
+          <div class="header__logout" @click="logout">ВЫЙТИ</div>
+
+          <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
+            <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
+          </div>
         </div>
       </div>
     </header>
@@ -37,12 +41,24 @@
 
 <script>
 import {mdiAccount} from '@mdi/js'
+import instance from "@/axios";
+import router from "@/router";
 
 export default {
   name: 'App',
   data: () => ({
     mdiAccount
   }),
+  methods: {
+    logout() {
+      // Удаляем токен из localStorage
+      localStorage.removeItem('access_token');
+      // Удаляем заголовок авторизации
+      delete instance.defaults.headers.common['Authorization'];
+      // Перенаправляем пользователя на страницу входа
+      router.push('/login');
+    }
+  }
 }
 </script>
 
@@ -136,6 +152,17 @@ main:after {
     height: 46px;
     overflow: hidden;
   }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__logout {
+    transform: rotateZ(50deg);
+  }
+
 }
 
 .add__btn {

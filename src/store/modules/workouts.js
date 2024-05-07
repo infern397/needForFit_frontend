@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/axios';
 
 export default {
     state: {
@@ -22,29 +22,32 @@ export default {
         },
     },
     actions: {
-        fetchWorkouts({ commit }) {
-            return axios.get('http://127.0.0.1:8000/api/workouts/1')
+        fetchWorkouts({commit}) {
+            const uid = localStorage.getItem('uid');
+            return axios.get(`workouts/${uid}`)
                 .then(response => {
                     commit('SET_WORKOUTS', response.data);
+                })
+                .catch(_ => {
                 });
         },
-        addWorkout({ commit }) {
-            return axios.post('http://127.0.0.1:8000/api/workouts/',
-            { uid: 1}
+        addWorkout({commit}) {
+            return axios.post('workouts/',
+                {uid: localStorage.getItem('uid')}
             )
                 .then(response => {
                     commit('ADD_WORKOUT', response.data);
                 });
         },
-        updateWorkout({ commit }, workoutData) {
-            return axios.put(`http://127.0.0.1:8000/api/workouts/${workoutData.id}/`, workoutData)
+        updateWorkout({commit}, workoutData) {
+            return axios.put(`workouts/${workoutData.id}/`, workoutData)
                 .then(response => {
                     commit('UPDATE_WORKOUT', response.data);
                 });
         },
-        deleteWorkout({ commit }, workoutId) {
+        deleteWorkout({commit}, workoutId) {
             console.log(workoutId);
-            return axios.delete(`http://127.0.0.1:8000/api/workouts/${workoutId}/`)
+            return axios.delete(`workouts/${workoutId}/`)
                 .then(() => {
                     commit('DELETE_WORKOUT', workoutId);
                 });
