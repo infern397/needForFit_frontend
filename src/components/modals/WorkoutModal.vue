@@ -32,7 +32,7 @@
 <script>
 import axios from "axios";
 import BaseModal from "@/components/modals/BaseModal";
-import { mapActions, mapGetters } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 
 export default {
@@ -107,12 +107,19 @@ export default {
   }
 
   &__title {
+    line-height: 1;
     text-align: center;
     font-size: 40px;
     margin-bottom: 38px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 10px;
+      font-size: 30px;
+    }
   }
 
   &__label {
+    width: 100%;
     font-size: 20px;
     display: flex;
     flex-direction: column;
@@ -124,6 +131,14 @@ export default {
     font-size: 36px;
     background-color: #fff;
     border: 1px solid #000000;
+
+    @media (max-width: 768px) {
+      font-size: 25px;
+    }
+
+    @media (max-width: 425px) {
+      //font-size: 20px;
+    }
   }
 
   &__input:focus {
@@ -135,6 +150,16 @@ export default {
     gap: 8px;
     display: flex;
     width: 100%;
+
+    @media (max-width: 768px) {
+      margin-top: 15px;
+    }
+
+    @media (max-width: 425px) {
+      font-size: 22px;
+      flex-direction: column;
+      gap: 3px;
+    }
   }
 
   &__btn {
@@ -142,13 +167,23 @@ export default {
     font-size: 36px;
     border: 1px solid #000000;
     border-radius: 10px;
+    width: 100%;
+
+    @media (max-width: 768px) {
+      font-size: 22px;
+    }
   }
 }
 
 .workout {
   &__inputs-row {
+    width: 100%;
     display: flex;
     gap: 3px;
+
+    @media (max-width: 425px) {
+      flex-direction: column;
+    }
   }
 
   &__categories {
@@ -156,6 +191,10 @@ export default {
     font-size: 36px;
     background-color: #ffffff;
     border: 1px solid #000000;
+
+    @media (max-width: 768px) {
+      font-size: 22px;
+    }
 
     &:focus {
       outline: 1px solid #000000;

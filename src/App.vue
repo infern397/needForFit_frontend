@@ -46,7 +46,7 @@
           </li>
         </ul>
       </div>
-      <router-view :style="isMenuOpen ? 'backdrop-filter: blur(5px);' : ''"></router-view>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
@@ -132,7 +132,7 @@ main:after {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 1;
   background: #7C8685;
   font-family: "Roboto", sans-serif;
   font-size: 20px;

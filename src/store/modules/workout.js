@@ -6,9 +6,11 @@ export default {
     },
     mutations: {
         SET_EXERCISES_LIST(state, workoutList) {
+            console.log(workoutList)
             state.workoutList = workoutList;
         },
         ADD_APPROACH(state, approach) {
+            console.log(approach)
             const exercise = state.workoutList.find(exercise => exercise.exercise.id === approach.eid);
             exercise.approaches.push(approach)
         },
@@ -27,7 +29,7 @@ export default {
             }
         },
         REMOVE_EXERCISE(state, exerciseId) {
-            const exerciseIndex = state.workoutList.find(exercise => exercise.exercise.id === exerciseId);
+            const exerciseIndex = state.workoutList.findIndex(exercise => exercise.exercise.id === exerciseId);
             if (exerciseIndex !== -1) {
                 state.workoutList.splice(exerciseIndex, 1);
             }
@@ -37,7 +39,6 @@ export default {
         fetchApproaches({commit}, workoutId) {
             return axios.get(`http://127.0.0.1:8000/api/approaches/${workoutId}`)
                 .then(response => {
-                    console.log('set')
                     commit('SET_EXERCISES_LIST', response.data);
                 });
         },
@@ -47,7 +48,7 @@ export default {
         removeExercise({commit}, {wid, eid}) {
             return axios.delete(`http://127.0.0.1:8000/api/approaches/${wid}/${eid}`)
                 .then(response => {
-                    commit('REMOVE_EXERCISE', response.data[0].eid);
+                    commit('REMOVE_EXERCISE', eid);
                 });
         },
         addApproach({commit}, {eid, wid, reps, weight}) {

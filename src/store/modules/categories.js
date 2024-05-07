@@ -24,27 +24,27 @@ export default {
     },
     actions: {
         fetchCategories({ commit }) {
-            return axios.get(`http://127.0.0.1:8000/api/workouts/types/${localStorage.getItem('uid')}`)
+            return axios.get(`http://127.0.0.1:8000/api/workout_types/${localStorage.getItem('uid')}`)
                 .then(response => {
                     commit('SET_CATEGORIES', response.data);
                 });
         },
         addCategory({ commit }, categoryData) {
             console.log(categoryData)
-            return axios.post('http://127.0.0.1:8000/api/workouts/types/', categoryData)
+            return axios.post('http://127.0.0.1:8000/api/workout_types/', categoryData)
                 .then(response => {
                     commit('ADD_CATEGORY', response.data);
                 });
         },
         updateCategory({ commit }, categoryData) {
-            return axios.put(`http://127.0.0.1:8000/api/workouts/types/${categoryData.id}/`, categoryData)
+            return axios.put(`http://127.0.0.1:8000/api/workout_types/${categoryData.id}/`, categoryData)
                 .then(response => {
                     commit('UPDATE_CATEGORY', response.data);
                 });
         },
         deleteCategory({ commit }, categoryId) {
             console.log(categoryId);
-            return axios.delete(`http://127.0.0.1:8000/api/workouts/types/${categoryId}/`)
+            return axios.delete(`http://127.0.0.1:8000/api/workout_types/${categoryId}/`)
                 .then(() => {
                     commit('DELETE_CATEGORY', categoryId);
                 });

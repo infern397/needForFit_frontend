@@ -166,7 +166,6 @@ export default {
   }
 
   &__title {
-    margin: 0 auto;
     font-size: 16px;
     padding: 12px 0;
   }
@@ -180,8 +179,10 @@ export default {
   }
 
   &__header {
+    position: relative;
     width: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
   }
 }
@@ -205,8 +206,8 @@ export default {
 }
 
 .remove__btn {
-  float: right;
-  clear: both;
+  position: absolute;
+  right: 0;
 }
 </style>
 

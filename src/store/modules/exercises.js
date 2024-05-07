@@ -33,7 +33,10 @@ export default {
                 "reps": 0,
                 "weight": 0,
                 "time": 0
-            });
+            })
+                .then(response => {
+                    commit('SET_TYPES_LIST', response.data);
+                });
         },
         fetchTypes({commit}) {
             return axios.get('http://127.0.0.1:8000/api/exercises/types_with_ids')

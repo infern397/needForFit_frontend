@@ -6,7 +6,8 @@
             @click="getExercises()">
           All
         </li>
-        <li class="filter__item" v-bind:class="{ 'filter__item-active': activeType === type.id }" v-for="type in typesList" :key="type.id"
+        <li class="filter__item" v-bind:class="{ 'filter__item-active': activeType === type.id }"
+            v-for="type in typesList" :key="type.id"
             @click="getExercisesByType(type.id)">
           {{ type.name }}
         </li>
@@ -67,8 +68,9 @@ export default {
     },
     addExerciseToWorkout(eid) {
       let wid = this.$route.params.id;
-      this.addExercise({eid, wid});
-      this.$router.push({name: 'workout', params: {id: wid}});
+      this.addExercise({eid, wid}).then(res => {
+        this.$router.push({name: 'workout', params: {id: wid}});
+      });
     },
     getTypes() {
       this.fetchTypes();
