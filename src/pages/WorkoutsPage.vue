@@ -212,6 +212,7 @@ export default {
   border-radius: 10px;
 
   &__name {
+    font-weight: 500;
     text-align: center;
   }
 

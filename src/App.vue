@@ -28,14 +28,25 @@
           <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
             <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
           </div>
-          <div class="header__menu" @click="$router.push({name: 'account', params: { id: 1 }})">
+          <div class="header__menu" @click="toggleMenu">
             <img src="/images/header/burger.png" class="header__menu" alt="menu">
           </div>
         </div>
       </div>
     </header>
     <v-main class="position-relative">
-      <router-view></router-view>
+      <div class="burger-menu" v-if="isMenuOpen">
+        <ul class="burger-menu__list">
+          <li class="burger-menu__item">Меню</li>
+          <li class="burger-menu__item">О нас</li>
+          <li class="burger-menu__item">Связь</li>
+          <li class="burger-menu__item burger-menu__item-profile"
+              @click="$router.push({name: 'account', params: { id: 1 }})">
+            <img src="/images/header/profile-logo.svg" class="" alt="profile">
+          </li>
+        </ul>
+      </div>
+      <router-view :style="isMenuOpen ? 'backdrop-filter: blur(5px);' : ''"></router-view>
     </v-main>
   </v-app>
 </template>
@@ -48,7 +59,8 @@ import router from "@/router";
 export default {
   name: 'App',
   data: () => ({
-    mdiAccount
+    mdiAccount,
+    isMenuOpen: false,
   }),
   methods: {
     logout() {
@@ -58,7 +70,10 @@ export default {
       delete instance.defaults.headers.common['Authorization'];
       // Перенаправляем пользователя на страницу входа
       router.push('/login');
-    }
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
   }
 }
 </script>
@@ -71,6 +86,15 @@ main {
 
 main * {
   z-index: 1;
+}
+
+.v-main {
+  padding-top: 86px;
+
+  @media (max-width: 425px) {
+
+  padding-top: 100px;
+  }
 }
 
 main:before {
@@ -105,6 +129,10 @@ main:after {
 }
 
 .header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
   background: #7C8685;
   font-family: "Roboto", sans-serif;
   font-size: 20px;
@@ -203,17 +231,79 @@ main:after {
 }
 
 .add__btn {
+  width: 100px; /* ширина кнопки равна 100px */
+  height: 100px; /* высота кнопки равна 100px */
   z-index: 1;
-  padding: 20px;
+  padding: 20px; /* отступ внутри кнопки равен 20px */
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  right: 40px;
-  bottom: 40px;
+  right: 40px; /* отступ справа равен 40px */
+  bottom: 40px; /* отступ снизу равен 40px */
   cursor: pointer;
   background: #D9D9D9;
   border-radius: 50%;
+
+  @media (max-width: 1024px) {
+    width: 80px;
+    height: 80px;
+    padding: 16px;
+    right: 32px;
+    bottom: 32px;
+  }
+
+  @media (max-width: 768px) {
+    width: 70px;
+    height: 70px;
+    padding: 12px;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  &-image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.burger-menu {
+  padding: 0px 9px;
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+
+
+  &__list {
+    list-style: none;
+    padding: 20px 33px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-direction: column;
+    background-color: #7C8685;
+  }
+
+  &__item {
+    text-align: center;
+    font-size: 40px;
+    width: 100%;
+    border-bottom: 1px solid #000000;
+    line-height: 1;
+
+    &-profile {
+      background-color: #fff;
+      border-radius: 50%;
+      height: 70px;
+      width: 70px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }
 
 main {
