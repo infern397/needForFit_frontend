@@ -123,7 +123,7 @@ export default {
 
   &__list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 10px;
   }
 
@@ -139,14 +139,14 @@ export default {
 
 .approaches {
   &__list {
-    margin-top: auto;
-    max-height: 63px;
+    //margin-top: auto;
     padding: 8px;
     gap: 3px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 47px);
+    grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
     list-style: none;
 
+    height: 100%;
     width: 100%;
     background-color: #7C8685;
     border-radius: 10px;
@@ -167,7 +167,7 @@ export default {
 
   &__title {
     margin: 0 auto;
-    font-size: 20px;
+    font-size: 16px;
     padding: 12px 0;
   }
 

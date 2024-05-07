@@ -25,10 +25,11 @@
           </ul>
         </nav>
         <div class="header__right">
-          <div class="header__logout" @click="logout">ВЫЙТИ</div>
-
           <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
             <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
+          </div>
+          <div class="header__menu" @click="$router.push({name: 'account', params: { id: 1 }})">
+            <img src="/images/header/burger.png" class="header__menu" alt="menu">
           </div>
         </div>
       </div>
@@ -109,11 +110,29 @@ main:after {
   font-size: 20px;
 
   &__inner {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding: 0 12px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 425px) {
+      padding: 12px;
+      position: relative;
+      justify-content: center;
+    }
+  }
+
+  &__menu {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    @media (max-width: 425px) {
+      display: block;
+    }
   }
 
   &__icon {
@@ -126,6 +145,8 @@ main:after {
       width: 100%;
       height: 100%;
     }
+
+
   }
 
   &__nav {
@@ -136,11 +157,24 @@ main:after {
       list-style: none;
       display: flex;
       gap: 50px;
+      @media (max-width: 769px) {
+        gap: 20px;
+
+      }
     }
 
     &-link {
       color: inherit;
       text-decoration: none;
+    }
+
+    @media (max-width: 769px) {
+      margin-left: unset;
+      margin-right: unset;
+    }
+
+    @media (max-width: 425px) {
+      display: none;
     }
   }
 
@@ -151,6 +185,10 @@ main:after {
     width: 46px;
     height: 46px;
     overflow: hidden;
+
+    @media (max-width: 425px) {
+      display: none;
+    }
   }
 
   &__right {
@@ -160,7 +198,6 @@ main:after {
   }
 
   &__logout {
-    transform: rotateZ(50deg);
   }
 
 }
