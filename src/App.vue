@@ -93,7 +93,7 @@ main * {
 
   @media (max-width: 425px) {
 
-  padding-top: 100px;
+  padding-top: 110px;
   }
 }
 

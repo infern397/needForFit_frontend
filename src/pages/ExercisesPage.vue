@@ -20,8 +20,11 @@
       <ul class="exercises__list">
         <li class="exercises__item" v-for="exercise in exercisesList" :key="exercise.id"
             @click="addExerciseToWorkout(exercise.id)">
-          <img src="" alt="" class="exercises__img">
-          <p class="exercises__name">{{ exercise.name }}</p>
+          <div class="exercises__item-wrapper">
+            <img src="" alt="" class="exercises__img">
+            <p class="exercises__name">{{ exercise.name }}</p>
+          </div>
+          <button class="exercises__item-btn" @click="addExerciseToWorkout(exercise.id)">Добавить</button>
         </li>
 
       </ul>
@@ -94,8 +97,16 @@ export default {
   &__list {
     list-style: none;
     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px 10px;
-    grid-template-columns: repeat(4, 1fr);
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    @media (max-width: 425px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   &__item {
@@ -103,20 +114,59 @@ export default {
     background-color: #D9D9D9;
     border-radius: 10px;
     cursor: pointer;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
 
+    @media (max-width: 425px) {
+      aspect-ratio: unset;
+    }
 
+    &-btn {
+      display: none;
+      padding: 8px 0;
+      background-color: #fff;
+      border-radius: 10px;
+      @media (max-width: 425px) {
+        display: block;
+      }
+    }
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      @media (max-width: 425px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      }
+    }
   }
 
   &__img {
+    flex-grow: 1;
+
     width: 100%;
-    height: 256px;
+    object-fit: cover;
     background: #7C8685;
     border-radius: 10px;
+
+    @media (max-width: 425px) {
+      flex-grow: 0;
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+    }
   }
 
   &__name {
     text-align: center;
     font-size: 20px;
+
+    @media (max-width: 425px) {
+      font-size: 16px;
+    }
   }
 }
 
@@ -129,17 +179,25 @@ export default {
   &__list {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 15px 50px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px 20px;
+
+    @media (max-width: 425px) {
+      display: flex;
+      padding: 5px;
+      overflow-x: auto;
+      gap: 10px;
+    }
   }
 
   &__item {
-    padding: 7px 0;
+    padding: 7px 7px;
     text-align: center;
     grid-column: 1 span;
     font-size: 20px;
     background-color: #D9D9D9;
     border-radius: 10px;
+    line-height: 1;
 
     &-active {
       outline: 2px solid #000000;
