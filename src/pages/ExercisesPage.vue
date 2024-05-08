@@ -97,11 +97,11 @@ export default {
   &__list {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 15px 10px;
 
     @media (max-width: 768px) {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 
     @media (max-width: 425px) {
@@ -140,6 +140,7 @@ export default {
         flex-direction: row;
         align-items: center;
         gap: 10px;
+        margin-bottom: 10px;
       }
     }
   }
@@ -164,7 +165,11 @@ export default {
     text-align: center;
     font-size: 20px;
 
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
+
+      @media (max-width: 425px) {
       font-size: 16px;
     }
   }
@@ -181,6 +186,11 @@ export default {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 15px 20px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+
+    }
 
     @media (max-width: 425px) {
       display: flex;
