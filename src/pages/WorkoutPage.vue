@@ -114,7 +114,6 @@ export default {
     console.log(123)
   },
   beforeRouteLeave(to, from, next) {
-    console.log('leave')
     this.saveWorkout();
     next();
   },

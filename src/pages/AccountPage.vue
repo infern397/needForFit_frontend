@@ -4,15 +4,24 @@
                  @delete="deleteCategoryByModal" @close="closeEdit"/>
   <div class="container account__inner">
     <div class="account__left">
-      <img src="/images/account/profile.svg" alt="" class="account__profile-img">
-      <p class="account__name">Admin</p>
-      <ul class="account__stats">
-        <li class="account__stat">Общий поднятый вес: {{ userStat.ttl_weight }} кг</li>
-        <li class="account__stat">Максимальный поднятый вес: {{ userStat.max_weight }} кг</li>
-        <li class="account__stat">Общее кол-во повторений: {{ userStat.ttl_reps }}</li>
-      </ul>
+      <div class="account__left-wrapper">
+        <div class="account__info">
+        <img src="/images/account/profile.svg" alt="" class="account__profile-img">
+        <p class="account__name-mobile">Admin</p>
+        </div>
+        <div class="account__info-stats">
+          <p class="account__name">Admin</p>
+          <ul class="account__stats">
+            <li class="account__stat">Общий поднятый вес: {{ userStat.ttl_weight }}&nbsp;кг</li>
+            <li class="account__stat">Максимальный поднятый вес: {{ userStat.max_weight }}&nbsp;кг</li>
+            <li class="account__stat">Общее кол-во повторений: {{ userStat.ttl_reps }}</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="categories">
-        <div class="categories__title">Мои категории</div>
+        <div class="categories__title" @click="toggleCategoriesList">Мои категории</div>
+        <div class="" v-show="isCategoriesListVisible">
         <ul class="categories__list">
           <li v-for="category in categories" class="categories__item"
               @click="openEdit(category)"
@@ -22,6 +31,7 @@
         <button class="categories__btn" @click="openCreate">
           Добавить
         </button>
+        </div>
       </div>
     </div>
     <div class="account__right">
@@ -29,7 +39,7 @@
       <ul class="account__trainings">
         <li class="account__training" v-for="(workout, i) in workouts">
           <div class="training__title">
-            <p class="training__name">{{ workout.created_at }}</p>
+            <p class="training__name">{{ formatHumanDate(workout.created_at) }}</p>
             <!--            <v-icon v-if="!openedWorkouts[i]" icon="mdi-arrow-down-drop-circle-outline"-->
             <!--                    @click="openOrCloseWorkout(i)"></v-icon>-->
             <!--            <v-icon v-else icon="mdi-arrow-down-drop-circle-outline" @click="openOrCloseWorkout(i)"-->
@@ -148,7 +158,7 @@
 <script>
 import axios from "axios";
 import CategoryModal from "@/components/modals/CategoryModal"
-import { mapActions, mapGetters } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
   name: "AccountPage",
@@ -165,7 +175,8 @@ export default {
       opens: false,
       showCreateModal: false,
       showEditModal: false,
-      chooseCategory: null
+      chooseCategory: null,
+      isCategoriesListVisible: false,
     }
   },
   methods: {
@@ -209,7 +220,29 @@ export default {
     deleteCategoryByModal(id) {
       this.deleteCategory(id)
       this.showEditModal = false
-    }
+    },
+    formatHumanDate(dateString) {
+      let date = new Date(dateString);
+      let formattedDate = date.toLocaleDateString('ru-RU', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+
+      // Добавляем ведущий ноль к часам и минутам, если они меньше 10
+      if (hours < 10) hours = '0' + hours;
+      if (minutes < 10) minutes = '0' + minutes;
+
+      return `${formattedDate} ${hours}:${minutes}`;
+    },
+    toggleCategoriesList() {
+      if (window.innerWidth <= 425) {
+        this.isCategoriesListVisible = !this.isCategoriesListVisible;
+      }
+    },
   },
   computed: {
     ...mapGetters(['categories']),
@@ -229,6 +262,25 @@ export default {
     padding-top: 34px;
     display: flex;
     justify-content: space-between;
+    gap: 30px;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+    }
+  }
+
+  &__info {
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+    &-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-grow: 1;
+      width: 100%;
+    }
   }
 
   &__left {
@@ -237,17 +289,52 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 6px;
+
+    @media (max-width: 576px) {
+      max-width: unset;
+    }
+
+    &-wrapper {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      align-content: center;
+      gap: 6px;
+      @media (max-width: 576px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: stretch
+      }
+    }
+
   }
 
   &__profile-img {
     background-color: #fff;
-    border-radius: 50px;
+    border-radius: 30px;
     max-height: 235px;
+
+    @media (max-width: 576px) {
+      max-height: 110px;
+
+    }
   }
 
   &__name {
+    width: fit-content;
     font-size: 30px;
     font-weight: 500;
+    @media (max-width: 576px) {
+      display: none;
+    }
+
+    &-mobile {
+      display: none;
+      @media (max-width: 576px) {
+        display: block;
+      }
+    }
   }
 
   &__stats {
@@ -256,10 +343,27 @@ export default {
     background-color: #D9D9D9;
     border: 1px solid #000000;
     border-radius: 10px;
+
+    @media (max-width: 768px) {
+      height: 100%;
+      width: 100%;
+    }
   }
 
   &__stat {
     font-size: 24px;
+
+    @media (max-width: 1024px) {
+      font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 15px;
+    }
   }
 
   &__title {
@@ -270,6 +374,14 @@ export default {
     background-color: #D9D9D9;
     border-radius: 10px;
     border: 1px solid #000000;
+
+    @media (max-width: 1024px) {
+      font-size: 28px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
   }
 
   &__right {
@@ -291,6 +403,7 @@ export default {
     padding: 2px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid #000000;
   }
 
@@ -301,6 +414,14 @@ export default {
 
   &__name {
     font-size: 24px;
+
+    @media (max-width: 1024px) {
+      font-size: 22px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
   }
 }
 
@@ -359,6 +480,14 @@ export default {
   &__title {
     line-height: 1;
     font-size: 36px;
+
+    @media (max-width: 1024px) {
+      font-size: 32px;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
   }
 
   &__list {
@@ -391,6 +520,9 @@ export default {
     border: 1px solid #000000;
     border-radius: 10px;
     cursor: pointer;
+    @media (max-width: 1024px) {
+      font-size: 24px;
+    }
 
     &::after {
       display: block;
@@ -404,6 +536,10 @@ export default {
     font-size: 24px;
     border: 1px solid #000000;
     border-radius: 10px;
+
+    @media (max-width: 768px) {
+      margin-top: 20px;
+    }
 
     &:before {
       top: -10px;

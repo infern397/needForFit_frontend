@@ -4,10 +4,10 @@
                  @close="close"
                  @delete-workout="deleteWorkoutByModal"
                  @update-workout="updateWorkoutByModal"
-                  :workoutData="selectedWorkout || {}"/>
-<!--                  @save-approach="addApproach"-->
-<!--                  @delete-approach="removeApproach"-->
-<!--                  @update-approach="updateApproach"-->
+                 :workoutData="selectedWorkout || {}"/>
+  <!--                  @save-approach="addApproach"-->
+  <!--                  @delete-approach="removeApproach"-->
+  <!--                  @update-approach="updateApproach"-->
 
   <div class="workouts">
     <div class="container workouts__inner">
@@ -19,29 +19,33 @@
             <div class="workouts__content">
               <p class="workouts__name">{{ workout.name }}</p>
               <p class="workouts__date">
-                {{ workout.created_at.split('T')[0]}}
+                {{ workout.created_at.split('T')[0] }}
                 {{ workout.created_at.split('T')[1].slice(0, 5) }}
               </p>
             </div>
             <div class="workouts__icons">
-              <img src="/images/workouts/arrow.svg" alt="" class="workouts__open-image" @click.stop="openWorkout(workout.id)"
+              <img src="/images/workouts/arrow.svg" alt="" class="workouts__open-image"
+                   @click.stop="openWorkout(workout.id)"
                    v-bind:class="{ 'workouts__open-image_close': workout.id === expandedWorkoutId }">
               <img src="/images/workouts/edit-icon.svg" alt="" class="workouts__edit-image" @click.stop="editDialog(i)">
             </div>
           </div>
-          <div v-if="workout.id === expandedWorkoutId" class="workouts__preview" @click.stop>
-            <div class="exercise" v-for="exercise in expandedWorkout">
-              <div class="exercise__name">
-                {{exercise.exercise.name}}
+          <transition name="expand">
+            <div v-if="workout.id === expandedWorkoutId" class="workouts__preview" @click.stop>
+              <div class="exercise" v-for="exercise in expandedWorkout">
+                <div class="exercise__name">
+                  {{ exercise.exercise.name }}
+                </div>
+                <ul class="exercise__approaches">
+                  <li class="exercise__approach" v-for="approach in exercise.approaches">
+                    <div class="approach__weight">{{ approach.weight }} кг</div>
+                    <div class="approach__reps">{{ approach.reps }} пов</div>
+                  </li>
+                </ul>
               </div>
-              <ul class="exercise__approaches">
-                <li class="exercise__approach" v-for="approach in exercise.approaches">
-                  <div class="approach__weight">{{ approach.weight }} кг </div>
-                  <div class="approach__reps">{{ approach.reps }} пов</div>
-                </li>
-              </ul>
             </div>
-          </div>
+          </transition>
+
         </li>
       </ul>
     </div>
@@ -80,7 +84,7 @@
 
 <script>
 import axios from '@/axios';
-import { mapActions, mapGetters } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import WorkoutModal from "@/components/modals/WorkoutModal";
 
 export default {
@@ -239,5 +243,12 @@ export default {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.expand-enter-active, .expand-leave-active {
+  transition: height 0.5s;
+}
+.expand-enter, .expand-leave-to {
+  height: 0;
 }
 </style>
