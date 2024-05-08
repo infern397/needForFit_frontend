@@ -41,7 +41,7 @@
           <li class="burger-menu__item">О нас</li>
           <li class="burger-menu__item">Связь</li>
           <li class="burger-menu__item burger-menu__item-profile"
-              @click="$router.push({name: 'account', params: { id: 1 }})">
+              @click="$router.push({name: 'account'})">
             <img src="/images/header/profile-logo.svg" class="" alt="profile">
           </li>
         </ul>

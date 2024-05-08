@@ -82,7 +82,8 @@ export default {
     },
     saveWorkout() {
       axios.post('http://127.0.0.1:8000/api/workouts/' + this.$route.params.id)
-          .then(this.$router.push({name: 'workouts'}))
+          .then(res => {
+            console.log(res)})
           .catch(err => {
             console.log(err);
           })
@@ -111,7 +112,12 @@ export default {
   mounted() {
     this.getExercises();
     console.log(123)
-  }
+  },
+  beforeRouteLeave(to, from, next) {
+    console.log('leave')
+    this.saveWorkout();
+    next();
+  },
 }
 </script>
 

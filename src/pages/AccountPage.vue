@@ -2,18 +2,6 @@
   <CategoryModal v-if="showCreateModal" mode="create" @save-category="addCategoryByModal" @close="closeCreate"/>
   <CategoryModal v-if="showEditModal" :category="chooseCategory" mode="edit" @save-category="updateCategoryByModal"
                  @delete="deleteCategoryByModal" @close="closeEdit"/>
-  <!--  <CategoryCreateModal v-if="showCreateModal"-->
-  <!--                       class="modal"-->
-  <!--                       @close="closeCreate"-->
-  <!--                       @add-category="addCategory"-->
-  <!--  />-->
-  <!--  <CategoryEditModal v-if="showEditModal"-->
-  <!--                     class="modal"-->
-  <!--                     @close="closeEdit"-->
-  <!--                     @delete="deleteCategory"-->
-  <!--                     @update="updateCategory"-->
-  <!--                     :category="chooseCategory"-->
-  <!--  />-->
   <div class="container account__inner">
     <div class="account__left">
       <img src="/images/account/profile.svg" alt="" class="account__profile-img">
@@ -197,7 +185,7 @@ export default {
       this.showEditModal = false
     },
     getUserDate() {
-      axios.get('http://127.0.0.1:8000/api/users/stats/' + this.$route.params.id)
+      axios.get('http://127.0.0.1:8000/api/users/stats/' + localStorage.getItem('uid'))
           .then(res => {
             this.user = res.data.user;
             this.userStat = this.user.stat;

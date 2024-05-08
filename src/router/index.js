@@ -23,7 +23,7 @@ const routes = [
     component: ExercisesPage
   },
   {
-    path: '/account/:id',
+    path: '/account',
     name: 'account',
     component: AccountPage
   },
