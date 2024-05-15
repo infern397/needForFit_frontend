@@ -21,7 +21,7 @@
           <ul class="header__nav-list">
             <li class="header__nav-list-item"><a href="" class="header__nav-link">Меню</a></li>
             <li class="header__nav-list-item"><a href="" class="header__nav-link">О нас</a></li>
-            <li class="header__nav-list-item"><a href="" class="header__nav-link">Связь</a></li>
+            <li class="header__nav-list-item"><RouterLink :to="{ name: 'contacts' }" href="" class="header__nav-link">Связь</RouterLink></li>
           </ul>
         </nav>
         <div class="header__right">
