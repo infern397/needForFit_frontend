@@ -2,7 +2,12 @@
   <base-modal @close="$emit('close')">
     <h2 class="modal-form__title">{{ mode === 'create' ? 'Добавить категорию' : 'Редактировать категорию' }}</h2>
     <label class="modal-form__label">Название
-      <input class="modal-form__input" v-model="category.name"></label>
+      <input class="modal-form__input" v-model="categoryCopy.name" @input="v$.categoryCopy.name.$touch">
+      <span v-if="v$.categoryCopy.name.$dirty">
+        <span v-if="v$.categoryCopy.name.required.$invalid" class="error">Поле обязательно для заполнения</span>
+        <span v-if="v$.categoryCopy.name.maxLength.$invalid" class="error">Значение должно быть не более 20 символов</span>
+      </span>
+    </label>
     <div class="modal-form__btns">
       <button @click="saveCategory" class="modal-form__btn">{{ mode === 'create' ? 'Добавить' : 'Изменить' }}</button>
       <button v-if="mode === 'edit'" @click="$emit('delete', category.id)" class="modal-form__btn">Удалить</button>
@@ -12,6 +17,8 @@
 
 <script>
 import BaseModal from "@/components/modals/BaseModal";
+import { required, maxLength } from '@vuelidate/validators'
+import {useVuelidate} from "@vuelidate/core/dist";
 
 export default {
   name: "CategoryModal",
@@ -35,11 +42,38 @@ export default {
     }
   },
 
+  data() {
+    return {
+      categoryCopy: null
+    }
+  },
+
+  setup() {
+    return {v$: useVuelidate()}
+  },
+
+  created() {
+    this.categoryCopy = {...this.category};
+    this.categoryCopy.uid = localStorage.getItem('uid');
+  },
+
   methods: {
     saveCategory() {
-      if (this.category.name.trim() !== '')
-        this.$emit('save-category', this.category);
+      if (this.v$.$invalid) {
+        this.v$.$touch();
+        return;
+      }
+      console.log()
+      this.$emit('save-category', this.categoryCopy);
     },
+  },
+
+  validations() {
+    return {
+      categoryCopy: {
+        name: { required, maxLength: maxLength(20) }
+      }
+    }
   }
 }
 </script>
