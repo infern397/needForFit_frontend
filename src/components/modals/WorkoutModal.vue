@@ -110,7 +110,6 @@ export default {
   },
   created() {
     this.workoutCopy = structuredClone(this.workoutData);
-    console.log(this.workoutCopy)
   },
   validations() {
     return {
