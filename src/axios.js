@@ -1,8 +1,8 @@
 import axios from 'axios';
-import router from '@/router'; // Импортируйте ваш роутер
+import router from '@/router';
 
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/', // Замените на ваш базовый URL
+    baseURL: 'http://127.0.0.1:8000/api/',
 });
 
 const token = localStorage.getItem('access_token');

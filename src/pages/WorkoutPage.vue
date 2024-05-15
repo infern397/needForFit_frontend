@@ -1,7 +1,9 @@
 <template>
-  <ApproachModal ref="modal" v-show="showModal" @close="close"
+  <ApproachModal ref="modal" v-if="showModal" @close="close"
                  class="modal"
                  :approachData="selectedApproachData || {}"
+                 :approach-index="selectedApproachData.id"
+                 :exercise-index="selectedApproachData.eid"
                  @save-approach="addApproachToWorkout"
                  @delete-approach="removeApproachFromWorkout"
                  @update-approach="updateApproachInWorkout"
@@ -63,16 +65,21 @@ export default {
       this.fetchApproaches(this.$route.params.id);
     },
     addApproachDialog(exerciseIndex) {
-      this.selectedApproachData = null; // Очищаем данные о выбранном подходе
+      this.selectedApproachData = {
+        eid: exerciseIndex,
+        wid: this.$route.params.id,
+        reps: 0,
+        weight: 0,
+        time: 0
+      }; // Очищаем данные о выбранном подходе
       // Вызов модального окна для добавления подхода к упражнению с заданным индексом
       this.showModal = true
-      this.$refs.modal.openAddApproachModal(exerciseIndex);
     },
     editApproachDialog(exerciseIndex, approachIndex) {
       this.selectedApproachData = structuredClone(this.workoutList[exerciseIndex].approaches[approachIndex]);
       // Вызов модального окна для редактирования подхода к упражнению с заданными индексами
       this.showModal = true
-      this.$refs.modal.openEditApproachModal(exerciseIndex, approachIndex);
+
     },
     close() {
       this.showModal = false
@@ -83,7 +90,8 @@ export default {
     saveWorkout() {
       axios.post('http://127.0.0.1:8000/api/workouts/' + this.$route.params.id)
           .then(res => {
-            console.log(res)})
+            console.log(res)
+          })
           .catch(err => {
             console.log(err);
           })
@@ -96,6 +104,7 @@ export default {
     },
     addApproachToWorkout(approach, eid) {
       let wid = this.$route.params.id;
+      console.log(approach);
       this.addApproach({eid, wid, reps: Number(approach.reps), weight: Number(approach.weight)});
       this.close()
     },
@@ -103,15 +112,13 @@ export default {
       this.updateApproach(approach);
       this.close()
     },
-    removeApproachFromWorkout(exerciseIndex, approachIndex) {
-      const approach = this.workoutList[exerciseIndex].approaches[approachIndex];
+    removeApproachFromWorkout(approach) {
       this.removeApproach(approach.id);
       this.close()
     },
   },
   mounted() {
     this.getExercises();
-    console.log(123)
   },
   beforeRouteLeave(to, from, next) {
     this.saveWorkout();

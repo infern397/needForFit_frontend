@@ -5,6 +5,7 @@ import ExercisesPage from "@/pages/ExercisesPage";
 import AccountPage from "@/pages/AccountPage";
 import LoginPage from "@/pages/LoginPage";
 import RegistrationPage from "@/pages/RegistrationPage";
+import ContactsPage from "@/pages/ContactsPage";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/registration',
     name: 'registration',
     component: RegistrationPage
+  },
+  {
+    path: '/contacts',
+    name: 'contacts',
+    component: ContactsPage
   },
 ]
 

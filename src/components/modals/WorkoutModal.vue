@@ -4,7 +4,12 @@
   <base-modal @close="$emit('close')">
     <p class="workout-form__title">{{ workoutData.name }}</p>
     <label for="" class="workout-form__label">Название
-      <input class="workout-form__input" v-model="workoutCopy.name"></label>
+      <input class="workout-form__input" v-model="workoutCopy.name" @input="v$.workoutCopy.name.$touch">
+      <div v-if="v$.workoutCopy.name.$dirty">
+        <span v-if="v$.workoutCopy.name.required.$invalid">Заполните поле</span>
+        <span v-if="v$.workoutCopy.name.maxLength.$invalid">Название должно быть не более 20 символов</span>
+      </div>
+    </label>
     <div class="workout__inputs-row">
       <label for="" class="workout-form__label">Дата
         <input v-model="formatedDate" type="date" class="workout-form__input"></label>
@@ -30,9 +35,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import BaseModal from "@/components/modals/BaseModal";
 import {mapActions, mapGetters} from 'vuex';
+import {required, minLength, maxLength} from '@vuelidate/validators';
+import {useVuelidate} from '@vuelidate/core'
 
 
 export default {
@@ -41,12 +47,15 @@ export default {
   components: {
     BaseModal
   },
-
+  setup() {
+    return {v$: useVuelidate()}
+  },
   data() {
     return {
       isNewWorkout: true,
       exerciseIndex: null,
       workoutIndex: null,
+      workoutCopy: null
     };
   },
   props: {
@@ -60,7 +69,13 @@ export default {
     ...mapActions(['fetchCategories']),
 
     saveWorkout() {
-      this.$emit('update-workout', this.workoutCopy);
+      this.v$.$touch()
+      if (this.v$.$error) {
+        console.log('Validation errors:', this.v$)
+      } else {
+        // данные валидны, можно отправлять форму
+        this.$emit('update-workout', this.workoutCopy);
+      }
     },
 
     deleteWorkout() {
@@ -95,7 +110,16 @@ export default {
   },
   created() {
     this.workoutCopy = structuredClone(this.workoutData);
-    console.log(this.workoutCopy)
+  },
+  validations() {
+    return {
+      workoutCopy: {
+        name: {required, maxLength: maxLength(20)},
+        workout_type: {
+          id: {required, minLength: minLength(1)}
+        }
+      }
+    }
   }
 }
 </script>
