@@ -7,14 +7,16 @@
       <div class="account__left-wrapper">
         <div class="account__info">
         <img src="/images/account/profile.svg" alt="" class="account__profile-img">
-        <p class="account__name-mobile">Admin</p>
+        <p class="account__name-mobile">{{ user.username }}</p>
         </div>
         <div class="account__info-stats">
-          <p class="account__name">Admin</p>
+          <p class="account__name">{{ user.username }}</p>
           <ul class="account__stats">
             <li class="account__stat">Общий поднятый вес: {{ userStat.ttl_weight }}&nbsp;кг</li>
             <li class="account__stat">Максимальный поднятый вес: {{ userStat.max_weight }}&nbsp;кг</li>
             <li class="account__stat">Общее кол-во повторений: {{ userStat.ttl_reps }}</li>
+            <button @click="logout" class="categories__item">Выйти</button>
+
           </ul>
         </div>
       </div>
@@ -80,85 +82,14 @@
       </ul>
     </div>
   </div>
-  <!--    <v-container>-->
-  <!--      <v-row>-->
-  <!--        <v-col cols="5">-->
-  <!--          <v-card>-->
-  <!--            <v-card-title class="ml-5">{{ user.username }}</v-card-title>-->
-  <!--            <v-card-item>-->
-  <!--              <v-list>-->
-  <!--                <v-list-item>Общий поднятый вес: {{ userStat.ttl_weight }}кг</v-list-item>-->
-  <!--                <v-list-item>Максимальный поднятый вес: {{ userStat.max_weight }}кг</v-list-item>-->
-  <!--                <v-list-item>Общее кол-во повторений: {{ userStat.ttl_reps }}</v-list-item>-->
-  <!--              </v-list>-->
-  <!--            </v-card-item>-->
-  <!--          </v-card>-->
-  <!--        </v-col>-->
-
-  <!--        <v-col cols="7" offset="0">-->
-  <!--          <v-card class="d-flex flex-column align-center">-->
-  <!--            <v-card-title class="ml-a">Мои тренировки</v-card-title>-->
-  <!--            <v-card-item class="w-100">-->
-  <!--              <v-list lines="one" class="w-100">-->
-  <!--                <v-card class="w-100 d-block pa-5" v-for="(workout, i) in workouts">-->
-  <!--                  <v-row>-->
-  <!--                    <v-col cols="12" class="d-flex justify-space-between align-center">-->
-  <!--                      <v-card-title>{{ workout.created_at }}</v-card-title>-->
-  <!--                      <v-icon v-if="!openedWorkouts[i]" icon="mdi-arrow-down-drop-circle-outline"-->
-  <!--                              @click="openOrCloseWorkout(i)"></v-icon>-->
-  <!--                      <v-icon v-else icon="mdi-arrow-down-drop-circle-outline" @click="openOrCloseWorkout(i)"-->
-  <!--                              class="mdi-rotate-180"></v-icon>-->
-  <!--                    </v-col>-->
-  <!--                  </v-row>-->
-  <!--                  <transition name="drop" appear>-->
-  <!--                    <v-row v-show="openedWorkouts[i]" :key="i">-->
-  <!--                      <v-col cols="12">-->
-  <!--                        <v-row>-->
-  <!--                          <v-col cols="4" class="text-center">-->
-  <!--                            Любимое упражнение: {{ workout.stat.favorite_exercise }}-->
-  <!--                          </v-col>-->
-  <!--                          <v-col cols="4" class="text-center">-->
-  <!--                            Кол-во упражений: {{ workout.stat.exercises_count }}-->
-  <!--                          </v-col>-->
-  <!--                          <v-col cols="4" class="text-center">-->
-  <!--                            Общий вес: {{ workout.stat.total_weight }}-->
-  <!--                          </v-col>-->
-  <!--                        </v-row>-->
-  <!--                        <v-row>-->
-  <!--                          <v-col cols="6">-->
-  <!--                            <v-list lines="one">-->
-  <!--                              <v-card-title>Максимальное кол-во повторений</v-card-title>-->
-  <!--                              <v-list-item v-for="(stat, key) in workout.stat.max_reps">-->
-  <!--                                <v-list-item-title>{{ `${key}: ${stat}` }}</v-list-item-title>-->
-  <!--                              </v-list-item>-->
-  <!--                            </v-list>-->
-  <!--                          </v-col>-->
-  <!--                          <v-col cols="6">-->
-  <!--                            <v-list lines="one">-->
-  <!--                              <v-card-title>Максимальный вес</v-card-title>-->
-  <!--                              <v-list-item v-for="(stat, key) in workout.stat.max_weights">-->
-  <!--                                <v-list-item-title>{{ `${key}: ${stat}` }}</v-list-item-title>-->
-  <!--                              </v-list-item>-->
-  <!--                            </v-list>-->
-  <!--                          </v-col>-->
-  <!--                        </v-row>-->
-  <!--                      </v-col>-->
-  <!--                    </v-row>-->
-  <!--                  </transition>-->
-  <!--                </v-card>-->
-  <!--              </v-list>-->
-  <!--            </v-card-item>-->
-  <!--          </v-card>-->
-  <!--        </v-col>-->
-  <!--      </v-row>-->
-
-  <!--    </v-container>-->
 </template>
 
 <script>
 import axios from "axios";
 import CategoryModal from "@/components/modals/CategoryModal"
 import {mapActions, mapGetters} from 'vuex';
+import instance from "@/axios";
+import router from "@/router";
 
 export default {
   name: "AccountPage",
@@ -176,7 +107,7 @@ export default {
       showCreateModal: false,
       showEditModal: false,
       chooseCategory: null,
-      isCategoriesListVisible: false,
+      isCategoriesListVisible: true,
     }
   },
   methods: {
@@ -243,6 +174,14 @@ export default {
         this.isCategoriesListVisible = !this.isCategoriesListVisible;
       }
     },
+    logout() {
+      // Удаляем токен из localStorage
+      localStorage.removeItem('access_token');
+      // Удаляем заголовок авторизации
+      delete instance.defaults.headers.common['Authorization'];
+      // Перенаправляем пользователя на страницу входа
+      router.push('/login');
+    },
   },
   computed: {
     ...mapGetters(['categories']),
@@ -250,6 +189,9 @@ export default {
   mounted() {
     this.getUserDate();
     this.fetchCategories();
+    if (window.innerWidth <= 425) {
+      this.isCategoriesListVisible = false;
+    }
   }
 }
 </script>

@@ -2,9 +2,21 @@
     <base-modal @close="$emit('close')">
       <p class="approach-form__title">Жим лёжа</p>
       <label for="" class="approach-form__label">Повторения
-        <input type="number" v-model="approachData.reps" class="approach-form__input"></label>
+        <input type="number" v-model="approachCopy.reps" class="approach-form__input" @input="v$.approachCopy.reps.$touch">
+        <span v-if="v$.approachCopy.reps.$dirty">
+          <span v-if="v$.approachCopy.reps.required.$invalid" class="error">Поле обязательно для заполнения</span>
+          <span v-if="v$.approachCopy.reps.minValue.$invalid" class="error">Значение должно быть больше 1</span>
+          <span v-if="v$.approachCopy.reps.maxValue.$invalid" class="error">Значение должно быть меньше 1000</span>
+        </span>
+      </label>
       <label for="" class="approach-form__label">Вес
-        <input type="number" v-model="approachData.weight" class="approach-form__input"></label>
+        <input type="number" v-model="approachCopy.weight" class="approach-form__input" @input="v$.approachCopy.weight.$touch">
+        <span v-if="v$.approachCopy.weight.$dirty">
+          <span v-if="v$.approachCopy.weight.required.$invalid" class="error">Поле обязательно для заполнения</span>
+          <span v-if="v$.approachCopy.weight.minValue.$invalid" class="error">Значение должно быть больше 1</span>
+          <span v-if="v$.approachCopy.weight.maxValue.$invalid" class="error">Значение должно быть меньше 1000</span>
+        </span>
+      </label>
 
       <div class="approach-form__btns">
         <button class="approach-form__btn" @click="saveApproach">Сохранить</button>
@@ -15,6 +27,8 @@
 
 <script>
 import BaseModal from "@/components/modals/BaseModal";
+import { required, minValue, maxValue } from '@vuelidate/validators'
+import {useVuelidate} from "@vuelidate/core/dist";
 
 export default {
   name: "ApproachModal",
@@ -26,50 +40,47 @@ export default {
       reps: null,
       weight: null,
       isNewApproach: true,
-      exerciseIndex: null,
-      approachIndex: null,
-      approachData: this.approachData
+      approachCopy: {
+        reps: 0,
+        weight: 0
+      }
     };
   },
+
+  setup() {
+    return {v$: useVuelidate()}
+  },
+
+  created() {
+    this.approachCopy = structuredClone(this.approachData);
+    this.isNewApproach = !this.approachCopy.id;
+  },
+
   props: {
     approachData: {
       type: Object,
+      default: null
+    },
+    exerciseIndex: {
+      type: Number,
+    },
+    approachIndex: {
+      type: Number,
       default: null
     }
   },
 
   methods: {
-    openAddApproachModal(exerciseIndex) {
-      this.isNewApproach = true;
-      console.log(exerciseIndex)
-      this.exerciseIndex = exerciseIndex;
-      this.clearForm();
-    },
-
-    openEditApproachModal(exerciseIndex, approachIndex) {
-      this.isNewApproach = false;
-      this.exerciseIndex = exerciseIndex;
-      this.approachIndex = approachIndex;
-      this.loadApproachData();
-      console.log(this.approachData)
-    },
-
     clearForm() {
       this.reps = null;
       this.weight = null;
     },
 
-    loadApproachData() {
-      // Загрузка данных выбранного подхода для редактирования
-      // (например, из массива подходов)
-    },
-
     saveApproach() {
-      // Логика сохранения нового подхода
       if (this.isNewApproach) {
         const approach = {
-          reps: this.approachData.reps,
-          weight: this.approachData.weight
+          reps: this.approachCopy.reps,
+          weight: this.approachCopy.weight
         };
         this.$emit('save-approach', approach, this.exerciseIndex);
         this.clearForm();
@@ -79,13 +90,20 @@ export default {
     },
 
     updateApproach() {
-      console.log(this.approachData)
-      this.$emit('update-approach', this.approachData);
+      this.$emit('update-approach', this.approachCopy);
     },
 
     deleteApproach() {
       // Логика удаления подхода
-      this.$emit('delete-approach', this.exerciseIndex, this.approachIndex);
+      this.$emit('delete-approach', this.approachCopy);
+    }
+  },
+  validations() {
+    return {
+      approachCopy: {
+        reps: { required, minValue: minValue(1), maxValue: maxValue(1000) },
+        weight: { required, minValue: minValue(1), maxValue: maxValue(1000) }
+      }
     }
   }
 }
