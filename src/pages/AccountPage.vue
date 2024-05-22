@@ -35,6 +35,12 @@
         </button>
         </div>
       </div>
+      <div class="phrase">
+        <div class="phrase__text">
+          Моя цитата
+        </div>
+        <button class="phrase__btn">Установить</button>
+      </div>
     </div>
     <div class="account__right">
       <h2 class="account__title">Мои тренировки</h2>
@@ -525,6 +531,34 @@ export default {
   }
   100% {
     max-height: unset;
+  }
+}
+
+.phrase {
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 23px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #D9D9D9;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  &__text {
+    font-size: 36px;
+    line-height: 1;
+    @media (max-width: 1024px) {
+      font-size: 24px;
+    }
+  }
+  &__btn {
+    padding: 5px 20px;
+    font-size: 24px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    @media (max-width: 1024px) {
+      font-size: 18px;
+    }
   }
 }
 </style>
