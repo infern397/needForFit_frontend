@@ -4,6 +4,7 @@ import workouts from './modules/workouts';
 import categories from './modules/categories';
 import exercises from './modules/exercises';
 import workout from './modules/workout';
+import phrases from './modules/phrases';
 
 export default new Vuex.Store({
     modules: {
@@ -11,5 +12,6 @@ export default new Vuex.Store({
         categories,
         exercises,
         workout,
+        phrases,
     }
 });
