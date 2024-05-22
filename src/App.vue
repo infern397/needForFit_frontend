@@ -13,6 +13,7 @@
     <!--    </v-app-bar>-->
     <!--    >-->
     <header class="header">
+      <div class="header__wrapper">
       <div class="container header__inner">
         <div class="header__icon" @click="$router.push({name: 'workouts'})">
           <img src="/images/header/logo.svg" alt="Logo">
@@ -32,6 +33,15 @@
             <img src="/images/header/burger.png" class="header__menu" alt="menu">
           </div>
         </div>
+      </div>
+      </div>
+      <div class="header__phrase">
+        <div class="container">
+          <div class="header__phrase-text">
+            “Если я смогу увидеть это, а затем поверить, то только тогда я смогу этого достичь”
+          </div>
+        </div>
+
       </div>
     </header>
     <v-main class="position-relative">
@@ -63,6 +73,14 @@ export default {
     isMenuOpen: false,
   }),
   methods: {
+    adjustContentPadding() {
+      const header = document.querySelector('.header');
+      const mainContent = document.querySelector('.v-main');
+      if (header && mainContent) {
+        const headerHeight = header.offsetHeight;
+        mainContent.style.paddingTop = `${headerHeight}px`;
+      }
+    },
     logout() {
       // Удаляем токен из localStorage
       localStorage.removeItem('access_token');
@@ -74,7 +92,14 @@ export default {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
-  }
+  },
+  mounted() {
+    this.adjustContentPadding();
+    window.addEventListener('resize', this.adjustContentPadding);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.adjustContentPadding);
+  },
 }
 </script>
 
@@ -89,11 +114,9 @@ main * {
 }
 
 .v-main {
-  padding-top: 86px;
 
   @media (max-width: 425px) {
 
-  padding-top: 110px;
   }
 }
 
@@ -133,9 +156,13 @@ main:after {
   top: 0;
   width: 100%;
   z-index: 1;
-  background: #7C8685;
   font-family: "Roboto", sans-serif;
   font-size: 20px;
+
+  &__wrapper {
+    background: #7C8685;
+
+  }
 
   &__inner {
     padding: 0 12px;
@@ -228,6 +255,15 @@ main:after {
   &__logout {
   }
 
+  &__phrase {
+    background-color: rgba(124, 134, 133, 0.5);
+  }
+  &__phrase-text {
+    text-align: center;
+    font-style: italic;
+    max-width: 80%;
+    margin: 0 auto;
+  }
 }
 
 .add__btn {
