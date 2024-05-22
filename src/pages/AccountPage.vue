@@ -2,6 +2,8 @@
   <CategoryModal v-if="showCreateModal" mode="create" @save-category="addCategoryByModal" @close="closeCreate"/>
   <CategoryModal v-if="showEditModal" :category="chooseCategory" mode="edit" @save-category="updateCategoryByModal"
                  @delete="deleteCategoryByModal" @close="closeEdit"/>
+  <PhraseModal v-if="showPhraseModal" @close="closePhrase"/>
+
   <div class="container account__inner">
     <div class="account__left">
       <div class="account__left-wrapper">
@@ -39,7 +41,7 @@
         <div class="phrase__text">
           Моя цитата
         </div>
-        <button class="phrase__btn">Установить</button>
+        <button class="phrase__btn" @click="openPhrase">Установить</button>
       </div>
     </div>
     <div class="account__right">
@@ -96,10 +98,12 @@ import CategoryModal from "@/components/modals/CategoryModal"
 import {mapActions, mapGetters} from 'vuex';
 import instance from "@/axios";
 import router from "@/router";
+import PhraseModal from "@/components/modals/PhraseModal";
 
 export default {
   name: "AccountPage",
   components: {
+    PhraseModal,
     CategoryModal
   },
 
@@ -112,6 +116,7 @@ export default {
       opens: false,
       showCreateModal: false,
       showEditModal: false,
+      showPhraseModal: false,
       chooseCategory: null,
       isCategoriesListVisible: true,
     }
@@ -131,6 +136,12 @@ export default {
     closeEdit() {
       this.chooseCategory = null
       this.showEditModal = false
+    },
+    openPhrase() {
+      this.showPhraseModal = true;
+    },
+    closePhrase() {
+      this.showPhraseModal = false
     },
     getUserDate() {
       axios.get('http://127.0.0.1:8000/api/users/stats/' + localStorage.getItem('uid'))
