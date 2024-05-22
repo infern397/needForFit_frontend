@@ -37,8 +37,7 @@
       </div>
       <div class="header__phrase">
         <div class="container">
-          <div class="header__phrase-text">
-            “Если я смогу увидеть это, а затем поверить, то только тогда я смогу этого достичь”
+          <div class="header__phrase-text" v-text="phrase.phrase">
           </div>
         </div>
 
@@ -65,6 +64,7 @@
 import {mdiAccount} from '@mdi/js'
 import instance from "@/axios";
 import router from "@/router";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'App',
@@ -73,6 +73,8 @@ export default {
     isMenuOpen: false,
   }),
   methods: {
+    ...mapActions(['fetchPhrase']),
+
     adjustContentPadding() {
       const header = document.querySelector('.header');
       const mainContent = document.querySelector('.v-main');
@@ -94,12 +96,16 @@ export default {
     },
   },
   mounted() {
+    this.fetchPhrase()
     this.adjustContentPadding();
     window.addEventListener('resize', this.adjustContentPadding);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustContentPadding);
   },
+  computed: {
+    ...mapGetters(['phrase'])
+  }
 }
 </script>
 
