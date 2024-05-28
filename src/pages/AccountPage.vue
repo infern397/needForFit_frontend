@@ -8,8 +8,9 @@
     <div class="account__left">
       <div class="account__left-wrapper">
         <div class="account__info">
-        <img src="/images/account/profile.svg" alt="" class="account__profile-img">
-        <p class="account__name-mobile">{{ user.username }}</p>
+          <img src="/images/account/profile.svg" alt="" class="account__profile-img">
+          <p class="account__name-mobile">{{ user.username }}</p>
+
         </div>
         <div class="account__info-stats">
           <p class="account__name">{{ user.username }}</p>
@@ -17,7 +18,7 @@
             <li class="account__stat">Общий поднятый вес: {{ userStat.ttl_weight }}&nbsp;кг</li>
             <li class="account__stat">Максимальный поднятый вес: {{ userStat.max_weight }}&nbsp;кг</li>
             <li class="account__stat">Общее кол-во повторений: {{ userStat.ttl_reps }}</li>
-            <button @click="logout" class="categories__item">Выйти</button>
+            <!--            <button @click="logout" class="categories__item">Выйти</button>-->
 
           </ul>
         </div>
@@ -25,16 +26,16 @@
 
       <div class="categories">
         <div class="categories__title" @click="toggleCategoriesList">Мои категории</div>
-        <div class="" v-show="isCategoriesListVisible">
-        <ul class="categories__list">
-          <li v-for="category in categories" class="categories__item"
-              @click="openEdit(category)"
-          >{{ category.name }}
-          </li>
-        </ul>
-        <button class="categories__btn" @click="openCreate">
-          Добавить
-        </button>
+        <div class="categories__wrapper" v-show="isCategoriesListVisible">
+          <ul class="categories__list">
+            <li v-for="category in categories" class="categories__item"
+                @click="openEdit(category)"
+            >{{ category.name }}
+            </li>
+          </ul>
+          <button class="categories__btn" @click="openCreate">
+            Добавить
+          </button>
         </div>
       </div>
       <div class="phrase">
@@ -47,15 +48,15 @@
     <div class="account__right">
       <h2 class="account__title">Мои тренировки</h2>
       <ul class="account__trainings">
-        <li class="account__training" v-for="(workout, i) in workouts">
+        <li class="account__training" v-for="(workout, i) in workouts" @click="openOrCloseWorkout(i)">
           <div class="training__title">
             <p class="training__name">{{ formatHumanDate(workout.created_at) }}</p>
             <!--            <v-icon v-if="!openedWorkouts[i]" icon="mdi-arrow-down-drop-circle-outline"-->
             <!--                    @click="openOrCloseWorkout(i)"></v-icon>-->
             <!--            <v-icon v-else icon="mdi-arrow-down-drop-circle-outline" @click="openOrCloseWorkout(i)"-->
             <!--                    class="mdi-rotate-180"></v-icon>-->
-            <button v-if="!openedWorkouts[i]" class="training__open-btn" @click="openOrCloseWorkout(i)">&lt</button>
-            <button v-else class="training__open-btn" @click="openOrCloseWorkout(i)" style="transform: rotateZ(90deg)">
+            <button v-if="!openedWorkouts[i]" class="training__open-btn">&lt</button>
+            <button v-else class="training__open-btn" style="transform: rotateZ(90deg)">
               &lt;
             </button>
           </div>
@@ -223,7 +224,7 @@ export default {
     justify-content: space-between;
     gap: 30px;
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       flex-direction: column;
     }
   }
@@ -233,6 +234,7 @@ export default {
 
     flex-direction: column;
     align-items: center;
+
     &-stats {
       display: flex;
       flex-direction: column;
@@ -249,7 +251,7 @@ export default {
     align-items: center;
     gap: 6px;
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       max-width: unset;
     }
 
@@ -260,8 +262,11 @@ export default {
       align-items: stretch;
       align-content: center;
       gap: 6px;
-      @media (max-width: 576px) {
+      @media (max-width: 768px) {
+        max-width: unset;
         flex-direction: row;
+      }
+      @media (max-width: 576px) {
         justify-content: space-between;
         align-content: stretch
       }
@@ -274,6 +279,10 @@ export default {
     border-radius: 30px;
     max-height: 235px;
 
+    @media (max-width: 768px) {
+      max-height: 120px;
+    }
+
     @media (max-width: 576px) {
       max-height: 110px;
 
@@ -284,19 +293,22 @@ export default {
     width: fit-content;
     font-size: 30px;
     font-weight: 500;
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       display: none;
     }
 
     &-mobile {
       display: none;
-      @media (max-width: 576px) {
+      font-size: 20px;
+      @media (max-width: 768px) {
         display: block;
       }
     }
   }
 
   &__stats {
+    display: flex;
+    flex-direction: column;
     padding: 5px;
     list-style: none;
     background-color: #D9D9D9;
@@ -306,6 +318,7 @@ export default {
     @media (max-width: 768px) {
       height: 100%;
       width: 100%;
+      justify-content: space-around;
     }
   }
 
@@ -317,7 +330,7 @@ export default {
     }
 
     @media (max-width: 768px) {
-      font-size: 16px;
+      font-size: 20px;
     }
 
     @media (max-width: 576px) {
@@ -349,6 +362,10 @@ export default {
     align-items: center;
     flex: 1;
     max-width: 655px;
+
+    @media (max-width: 768px) {
+      max-width: unset;
+    }
   }
 }
 
@@ -395,6 +412,7 @@ export default {
   &__bottom {
     padding: 15px;
     display: flex;
+    gap: 5px;
     justify-content: space-between;
   }
 }
@@ -435,6 +453,10 @@ export default {
   background-color: #D9D9D9;
   border: 1px solid #000000;
   border-radius: 10px;
+
+  &__wrapper {
+    width: 100%;
+  }
 
   &__title {
     line-height: 1;
@@ -489,15 +511,16 @@ export default {
   }
 
   &__btn {
-    margin-top: 60px;
     position: relative;
     padding: 5px 30px;
     font-size: 24px;
     border: 1px solid #000000;
     border-radius: 10px;
+    margin: 20px auto 0;
+    display: block;
 
     @media (max-width: 768px) {
-      margin-top: 20px;
+      margin: 20px auto 0;
     }
 
     &:before {
@@ -555,6 +578,7 @@ export default {
   background-color: #D9D9D9;
   border: 1px solid #000000;
   border-radius: 10px;
+
   &__text {
     font-size: 36px;
     line-height: 1;
@@ -562,6 +586,7 @@ export default {
       font-size: 24px;
     }
   }
+
   &__btn {
     padding: 5px 20px;
     font-size: 24px;
