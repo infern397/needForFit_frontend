@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div class="header__phrase">
+      <div class="header__phrase" @load="adjustContentPadding">
         <div class="container">
           <div class="header__phrase-text">
             {{ phrase.phrase }}
@@ -88,31 +88,30 @@ export default {
       }
     },
     logout() {
-      // Удаляем токен из localStorage
       localStorage.removeItem('access_token');
-      // Удаляем заголовок авторизации
       delete instance.defaults.headers.common['Authorization'];
-      // Перенаправляем пользователя на страницу входа
       router.push('/login');
     },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
   },
-  mounted() {
+  created() {
     this.fetchPhrase()
     window.addEventListener('resize', this.adjustContentPadding);
-    this.adjustContentPadding();
+  },
+  watch: {
+    phrase() {
+      this.$nextTick(() => {
+        this.adjustContentPadding();
+      });
+    },
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustContentPadding);
   },
   computed: {
     ...mapGetters(['phrase']),
-    phraseText() {
-      this.adjustContentPadding();
-      return this.phrase;
-    }
   }
 }
 </script>
@@ -128,10 +127,8 @@ main * {
 }
 
 .v-main {
-
-  @media (max-width: 425px) {
-
-  }
+  padding-top: 0;
+  transition: padding-top 0.6s ease;
 }
 
 main:before {
@@ -373,4 +370,7 @@ main {
   background-color: #AAACA1;
 }
 
+.swiper-pagination-bullet-active {
+  background-color: #7C8685 !important;
+}
 </style>
