@@ -370,4 +370,7 @@ main {
   background-color: #AAACA1;
 }
 
+.swiper-pagination-bullet-active {
+  background-color: #7C8685 !important;
+}
 </style>
