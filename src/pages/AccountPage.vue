@@ -2,6 +2,8 @@
   <CategoryModal v-if="showCreateModal" mode="create" @save-category="addCategoryByModal" @close="closeCreate"/>
   <CategoryModal v-if="showEditModal" :category="chooseCategory" mode="edit" @save-category="updateCategoryByModal"
                  @delete="deleteCategoryByModal" @close="closeEdit"/>
+  <PhraseModal v-if="showPhraseModal" @close="closePhrase"/>
+
   <div class="container account__inner">
     <div class="account__left">
       <div class="account__left-wrapper">
@@ -34,6 +36,12 @@
           Добавить
         </button>
         </div>
+      </div>
+      <div class="phrase">
+        <div class="phrase__text">
+          Моя цитата
+        </div>
+        <button class="phrase__btn" @click="openPhrase">Установить</button>
       </div>
     </div>
     <div class="account__right">
@@ -90,10 +98,12 @@ import CategoryModal from "@/components/modals/CategoryModal"
 import {mapActions, mapGetters} from 'vuex';
 import instance from "@/axios";
 import router from "@/router";
+import PhraseModal from "@/components/modals/PhraseModal";
 
 export default {
   name: "AccountPage",
   components: {
+    PhraseModal,
     CategoryModal
   },
 
@@ -106,6 +116,7 @@ export default {
       opens: false,
       showCreateModal: false,
       showEditModal: false,
+      showPhraseModal: false,
       chooseCategory: null,
       isCategoriesListVisible: true,
     }
@@ -125,6 +136,12 @@ export default {
     closeEdit() {
       this.chooseCategory = null
       this.showEditModal = false
+    },
+    openPhrase() {
+      this.showPhraseModal = true;
+    },
+    closePhrase() {
+      this.showPhraseModal = false
     },
     getUserDate() {
       axios.get('http://127.0.0.1:8000/api/users/stats/' + localStorage.getItem('uid'))
@@ -525,6 +542,34 @@ export default {
   }
   100% {
     max-height: unset;
+  }
+}
+
+.phrase {
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 23px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #D9D9D9;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  &__text {
+    font-size: 36px;
+    line-height: 1;
+    @media (max-width: 1024px) {
+      font-size: 24px;
+    }
+  }
+  &__btn {
+    padding: 5px 20px;
+    font-size: 24px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    @media (max-width: 1024px) {
+      font-size: 18px;
+    }
   }
 }
 </style>

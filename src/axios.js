@@ -17,8 +17,9 @@ instance.interceptors.response.use(
     (error) => {
         if (error.response.status === 401) {
             router.push('/login');
+        } else {
+            return Promise.reject(error);
         }
-        return Promise.reject(error);
     }
 );
 
