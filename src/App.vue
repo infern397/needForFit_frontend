@@ -20,16 +20,28 @@
           </div>
           <nav class="header__nav">
             <ul class="header__nav-list">
-              <li class="header__nav-list-item"><a href="" class="header__nav-link">Меню</a></li>
-              <li class="header__nav-list-item"><a href="" class="header__nav-link">О нас</a></li>
+              <li class="header__nav-list-item">
+                <p class="header__nav-link">Меню</p>
+                <ul class="dropdown">
+                  <li><a href="#">Каталог&nbsp;тренировок</a></li>
+                  <li><a href="#">Каталог&nbsp;упражнений</a></li>
+                  <li><a href="#">Видеоуроки</a></li>
+                </ul>
+              </li>
+              <li class="header__nav-list-item"><a href="" class="header__nav-link">Личный кабинет</a></li>
               <li class="header__nav-list-item">
                 <RouterLink :to="{ name: 'contacts' }" href="" class="header__nav-link">Связь</RouterLink>
               </li>
             </ul>
           </nav>
           <div class="header__right">
-            <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
+            <div class="header__profile" @mouseover="openDropdown" @mouseleave="closeDropdown">
               <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
+              <ul class="dropdown" v-if="isDropdownOpen">
+                <li><a href="#">Профиль</a></li>
+                <li><a href="#">Настройки</a></li>
+                <li><a href="#" @click="logout">Выйти</a></li>
+              </ul>
             </div>
             <div class="header__menu" @click="toggleMenu">
               <img src="/images/header/burger.png" class="header__menu" alt="menu">
@@ -372,5 +384,37 @@ main {
 
 .swiper-pagination-bullet-active {
   background-color: #7C8685 !important;
+}
+
+.dropdown {
+  padding: 8px;
+  position: absolute;
+  list-style: none;
+  background-color: #7C8685;
+  border-top: 2px solid #00000033;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.header__nav-list-item {
+  position: relative;
+}
+
+.dropdown {
+  padding: 8px;
+  position: absolute;
+  list-style: none;
+  background-color: #7C8685;
+  border-top: 2px solid #00000033;
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.header__nav-list-item:hover .dropdown {
+  transform: scaleY(1);
 }
 </style>
