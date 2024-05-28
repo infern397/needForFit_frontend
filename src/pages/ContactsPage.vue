@@ -7,22 +7,22 @@
     <ul class="contacts__list">
       <li class="contacts__item">
         <a href="#" class="contacts__link">
-          <img src="/images/contacts/ТГ.png" alt="Telegram" class="contacts__img">
+          <img src="/images/contacts/tg.png" alt="Telegram" class="contacts__img">
         </a>
       </li>
       <li class="contacts__item">
         <a href="#" class="contacts__link">
-          <img src="/images/contacts/Гитхаб.png" alt="Guthub" class="contacts__img">
+          <img src="/images/contacts/git.png" alt="Guthub" class="contacts__img">
         </a>
       </li>
       <li class="contacts__item">
         <a href="#" class="contacts__link">
-          <img src="/images/contacts/ВК.png" alt="Vk" class="contacts__img">
+          <img src="/images/contacts/vk.png" alt="Vk" class="contacts__img">
         </a>
       </li>
       <li class="contacts__item">
         <a href="#" class="contacts__link">
-          <img src="/images/contacts/ДС.png" alt="Discord" class="contacts__img">
+          <img src="/images/contacts/ds.png" alt="Discord" class="contacts__img">
         </a>
       </li>
     </ul>
@@ -88,9 +88,7 @@ export default {
   }
 
   &__item {
-    @media (max-width: 425px) {
-      max-width: 150px;
-    }
+    max-width: 100px;
   }
 
   &__link {

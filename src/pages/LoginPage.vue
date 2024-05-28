@@ -21,6 +21,7 @@
 <script>
 import axios from "@/axios";
 import router from "@/router";
+import {mapActions} from "vuex";
 
 export default {
   name: "LoginPage",
@@ -31,6 +32,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['fetchPhrase']),
+    getPhrase() {
+      this.fetchPhrase();
+    },
     auth() {
       const bodyFormData = new FormData();
       bodyFormData.append('username', this.username);
@@ -42,7 +47,7 @@ export default {
         data: bodyFormData,
         headers: {"Content-Type": "multipart/form-data"},
       })
-          .then(function (response) {
+          .then((response) => { // Use arrow function here
             //handle success
             console.log(response);
             // Save the token and uid to localStorage
@@ -50,6 +55,8 @@ export default {
             localStorage.setItem('uid', response.data.uid);
             // Set the Authorization header for all axios requests
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.access_token;
+            // Fetch the phrase
+            this.getPhrase();
             router.push({name: 'workouts'})
           })
           .catch(function (response) {
