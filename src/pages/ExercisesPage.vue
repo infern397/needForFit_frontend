@@ -1,4 +1,10 @@
 <template>
+  <ExerciseModal
+      v-if="showModal"
+      :exerciseData="selectedExercise || {}"
+      @close="close"
+      class="modal"
+  ></ExerciseModal>
   <div class="container exercises__inner">
     <nav class="filter">
       <ul class="filter__list">
@@ -21,7 +27,10 @@
         <li class="exercises__item" v-for="exercise in exercisesList" :key="exercise.id"
             @click="addExerciseToWorkout(exercise.id)">
           <div class="exercises__item-wrapper">
-            <img src="" alt="" class="exercises__img">
+            <div class="exercises__img-wrapper" @click.stop="open(exercise)">
+              <img :src="'http://' + exercise.image" alt="" class="exercises__img">
+              <img src="/images/exercises/Лупа.png" alt="Подробнее" class="exercises__about">
+            </div>
             <p class="exercises__name">{{ exercise.name }}</p>
           </div>
           <button class="exercises__item-btn" @click="addExerciseToWorkout(exercise.id)">Добавить</button>
@@ -48,13 +57,20 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import ExerciseModal from "@/components/modals/ExerciseModal";
+
 
 export default {
   name: "ExercisesPage",
+  components: {
+    ExerciseModal
+  },
   data: function () {
     return {
       loading: false,
-      activeType: null
+      activeType: null,
+      showModal: false,
+      selectedExercise: null
     }
   },
   computed: {
@@ -62,6 +78,13 @@ export default {
   },
   methods: {
     ...mapActions(['fetchExercises', 'fetchExercisesByType', 'addExercise', 'fetchTypes']),
+    open(exercise) {
+      this.showModal = !this.showModal
+      this.selectedExercise = structuredClone(exercise)
+    },
+    close() {
+      this.showModal = false
+    },
     getExercises() {
       this.fetchExercises();
     },
@@ -149,9 +172,15 @@ export default {
     flex-grow: 1;
 
     width: 100%;
+    height: 100%;
     object-fit: cover;
     background: #7C8685;
     border-radius: 10px;
+
+    &-wrapper {
+      position: relative;
+    }
+
 
     @media (max-width: 425px) {
       flex-grow: 0;
@@ -159,6 +188,20 @@ export default {
       width: 38px;
       height: 38px;
     }
+  }
+
+  &__about {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .exercises__item:hover .exercises__about {
+    opacity: 1;
+    display: block;
+
   }
 
   &__name {
@@ -169,7 +212,7 @@ export default {
       font-size: 18px;
     }
 
-      @media (max-width: 425px) {
+    @media (max-width: 425px) {
       font-size: 16px;
     }
   }

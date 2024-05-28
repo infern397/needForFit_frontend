@@ -12,10 +12,11 @@ export default {
     },
     actions: {
         fetchPhrase({ commit }) {
-            return axios.get(`phrases/${localStorage.getItem('uid')}`)
+            return axios.get(`phrases/${localStorage.getItem('uid') ?? 0}`)
                 .then(response => {
                     commit('SET_PHRASE', response.data);
-                });
+                })
+
         },
         createPhrase({ commit }, text) {
             return axios.post('phrases/', {phrase: text, uid: localStorage.getItem('uid')})
@@ -23,13 +24,13 @@ export default {
                     commit('SET_PHRASE', response.data);
                 });
         },
-        updatePhrase({ commit }, phrase) {
-            return axios.put(`phrases/${localStorage.getItem('uid')}`, phrase)
+        updatePhrase({ commit }, text) {
+            return axios.put(`phrases/${localStorage.getItem('uid')}`, {phrase: text})
                 .then(response => {
                     commit('SET_PHRASE', response.data);
                 });
         },
-        deletePhrase({ dispatch }, categoryId) {
+        deletePhrase({ dispatch }) {
             return axios.delete(`phrases/${localStorage.getItem('uid')}`)
                 .then(() => {
                     dispatch('fetchPhrase');

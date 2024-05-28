@@ -14,30 +14,33 @@
     <!--    >-->
     <header class="header">
       <div class="header__wrapper">
-      <div class="container header__inner">
-        <div class="header__icon" @click="$router.push({name: 'workouts'})">
-          <img src="/images/header/logo.svg" alt="Logo">
-        </div>
-        <nav class="header__nav">
-          <ul class="header__nav-list">
-            <li class="header__nav-list-item"><a href="" class="header__nav-link">Меню</a></li>
-            <li class="header__nav-list-item"><a href="" class="header__nav-link">О нас</a></li>
-            <li class="header__nav-list-item"><RouterLink :to="{ name: 'contacts' }" href="" class="header__nav-link">Связь</RouterLink></li>
-          </ul>
-        </nav>
-        <div class="header__right">
-          <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
-            <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
+        <div class="container header__inner">
+          <div class="header__icon" @click="$router.push({name: 'workouts'})">
+            <img src="/images/header/logo.svg" alt="Logo">
           </div>
-          <div class="header__menu" @click="toggleMenu">
-            <img src="/images/header/burger.png" class="header__menu" alt="menu">
+          <nav class="header__nav">
+            <ul class="header__nav-list">
+              <li class="header__nav-list-item"><a href="" class="header__nav-link">Меню</a></li>
+              <li class="header__nav-list-item"><a href="" class="header__nav-link">О нас</a></li>
+              <li class="header__nav-list-item">
+                <RouterLink :to="{ name: 'contacts' }" href="" class="header__nav-link">Связь</RouterLink>
+              </li>
+            </ul>
+          </nav>
+          <div class="header__right">
+            <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
+              <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
+            </div>
+            <div class="header__menu" @click="toggleMenu">
+              <img src="/images/header/burger.png" class="header__menu" alt="menu">
+            </div>
           </div>
         </div>
-      </div>
       </div>
       <div class="header__phrase">
         <div class="container">
-          <div class="header__phrase-text" v-text="phrase.phrase">
+          <div class="header__phrase-text">
+            {{ phrase.phrase }}
           </div>
         </div>
 
@@ -80,6 +83,7 @@ export default {
       const mainContent = document.querySelector('.v-main');
       if (header && mainContent) {
         const headerHeight = header.offsetHeight;
+
         mainContent.style.paddingTop = `${headerHeight}px`;
       }
     },
@@ -97,14 +101,18 @@ export default {
   },
   mounted() {
     this.fetchPhrase()
-    this.adjustContentPadding();
     window.addEventListener('resize', this.adjustContentPadding);
+    this.adjustContentPadding();
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.adjustContentPadding);
   },
   computed: {
-    ...mapGetters(['phrase'])
+    ...mapGetters(['phrase']),
+    phraseText() {
+      this.adjustContentPadding();
+      return this.phrase;
+    }
   }
 }
 </script>
@@ -264,6 +272,7 @@ main:after {
   &__phrase {
     background-color: rgba(124, 134, 133, 0.5);
   }
+
   &__phrase-text {
     text-align: center;
     font-style: italic;
@@ -346,6 +355,18 @@ main:after {
       }
     }
   }
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  z-index: 100;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 main {

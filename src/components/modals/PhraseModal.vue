@@ -2,14 +2,14 @@
   <base-modal @close="$emit('close')">
     <h2 class="modal-form__title">{{ mode === 'create' ? 'Установить цитату' : 'Изменить цитату' }}</h2>
     <label class="modal-form__label">текст
-      <textarea class="modal-form__input" v-model="phrase.name" @input="v$.phrase.name.$touch"> </textarea>
-      <span v-if="v$.phrase.name.$dirty">
-        <span v-if="v$.phrase.name.required.$invalid" class="error">Поле обязательно для заполнения</span>
-        <span v-if="v$.phrase.name.maxLength.$invalid" class="error">Значение должно быть не более 200 символов</span>
+      <textarea class="modal-form__input" v-model="modalPhrase.phrase" @input="v$.modalPhrase.phrase.$touch"> </textarea>
+      <span v-if="v$.modalPhrase.phrase.$dirty">
+        <span v-if="v$.modalPhrase.phrase.required.$invalid" class="error">Поле обязательно для заполнения</span>
+        <span v-if="v$.modalPhrase.phrase.maxLength.$invalid" class="error">Значение должно быть не более 200 символов</span>
       </span>
     </label>
     <div class="modal-form__btns">
-      <button @click="" class="modal-form__btn">{{ mode === 'create' ? 'Добавить' : 'Изменить' }}</button>
+      <button @click="submit" class="modal-form__btn">{{ mode === 'create' ? 'Добавить' : 'Изменить' }}</button>
     </div>
   </base-modal>
 </template>
@@ -18,6 +18,7 @@
 import BaseModal from "@/components/modals/BaseModal";
 import { required, maxLength } from '@vuelidate/validators'
 import {useVuelidate} from "@vuelidate/core/dist";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "PhraseModal",
@@ -30,8 +31,9 @@ export default {
 
   data() {
     return {
-      phrase: {
-        name: ''
+      modalPhrase: {
+        phrase: '',
+        uid: null
       },
       mode: 'create'
     }
@@ -42,17 +44,33 @@ export default {
   },
 
   created() {
-
+    this.mode = this.phrase.uid ? 'update' : 'create';
+    if (this.mode === 'update') {
+      this.modalPhrase = {...this.phrase};
+    }
   },
 
   methods: {
-
+    ...mapActions(['createPhrase', 'updatePhrase', 'deletePhrase']),
+    submit() {
+      if (this.mode === 'create') {
+        this.createPhrase(this.modalPhrase.phrase);
+      } else {
+        if (this.modalPhrase.phrase === '') {
+          this.deletePhrase(this.modalPhrase.uid);
+        } else {
+          this.updatePhrase(this.modalPhrase.phrase);
+        }
+      }
+    },
   },
-
+  computed: {
+    ...mapGetters(['phrase']),
+  },
   validations() {
     return {
-      phrase: {
-        name: { required, maxLength: maxLength(200) }
+      modalPhrase: {
+        phrase: { required, maxLength: maxLength(200) }
       }
     }
   }
