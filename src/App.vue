@@ -35,14 +35,14 @@
             </ul>
           </nav>
           <div class="header__right">
-            <div class="header__profile" @mouseover="openDropdown" @mouseleave="closeDropdown">
+            <div class="header__profile">
               <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
-              <ul class="dropdown" v-if="isDropdownOpen">
-                <li><a href="#">Профиль</a></li>
-                <li><a href="#">Настройки</a></li>
-                <li><a href="#" @click="logout">Выйти</a></li>
-              </ul>
             </div>
+            <ul class="dropdown profile__dropdown">
+              <li><a href="#">Личный&nbsp;кабинет</a></li>
+              <li><a href="#">Профиль</a></li>
+              <li><a href="#" @click="logout">Выйти</a></li>
+            </ul>
             <div class="header__menu" @click="toggleMenu">
               <img src="/images/header/burger.png" class="header__menu" alt="menu">
             </div>
@@ -59,17 +59,6 @@
       </div>
     </header>
     <v-main class="position-relative">
-      <div class="burger-menu" v-if="isMenuOpen">
-        <ul class="burger-menu__list">
-          <li class="burger-menu__item">Меню</li>
-          <li class="burger-menu__item">О нас</li>
-          <li class="burger-menu__item">Связь</li>
-          <li class="burger-menu__item burger-menu__item-profile"
-              @click="$router.push({name: 'account'})">
-            <img src="/images/header/profile-logo.svg" class="" alt="profile">
-          </li>
-        </ul>
-      </div>
       <router-view></router-view>
     </v-main>
   </v-app>
@@ -201,6 +190,14 @@ main:after {
     }
   }
 
+  &__right {
+    position: relative;
+
+    @media (max-width: 425px) {
+      position: unset !important;
+    }
+  }
+
   &__menu {
     display: none;
     position: absolute;
@@ -208,7 +205,7 @@ main:after {
     top: 50%;
     transform: translateY(-50%);
 
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
       display: block;
     }
   }
@@ -246,12 +243,7 @@ main:after {
       text-decoration: none;
     }
 
-    @media (max-width: 769px) {
-      margin-left: unset;
-      margin-right: unset;
-    }
-
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
       display: none;
     }
   }
@@ -264,12 +256,13 @@ main:after {
     height: 46px;
     overflow: hidden;
 
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
       display: none;
     }
   }
 
   &__right {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -403,6 +396,11 @@ main {
   position: relative;
 }
 
+.profile__dropdown {
+  bottom: -108px;
+  right: 0;
+}
+
 .dropdown {
   padding: 8px;
   position: absolute;
@@ -416,5 +414,13 @@ main {
 
 .header__nav-list-item:hover .dropdown {
   transform: scaleY(1);
+}
+
+.header__right:hover .dropdown {
+  transform: scaleY(1);
+
+  @media (max-width: 768px) {
+    transform: scaleY(0);
+  }
 }
 </style>
