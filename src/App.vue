@@ -28,7 +28,9 @@
                   <li><a href="#">Видеоуроки</a></li>
                 </ul>
               </li>
-              <li class="header__nav-list-item"><a href="" class="header__nav-link">Личный кабинет</a></li>
+              <li class="header__nav-list-item">
+                <RouterLink :to="{ name: 'account' }" href="" class="header__nav-link">Личный&nbsp;кабинет</RouterLink>
+              </li>
               <li class="header__nav-list-item">
                 <RouterLink :to="{ name: 'contacts' }" href="" class="header__nav-link">Связь</RouterLink>
               </li>
@@ -36,21 +38,42 @@
           </nav>
           <div class="header__right">
             <div class="header__profile"
-                 @click="$router.push({name: 'account'})"
+                 @click.capture="$router.push({name: 'account'})"
             >
               <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
             </div>
             <ul class="dropdown profile__dropdown">
-              <li><a href="#">Личный&nbsp;кабинет</a></li>
+              <li>
+                <RouterLink :to="{ name: 'account' }" href="" class="header__nav-link">Личный&nbsp;кабинет</RouterLink>
+              </li>
               <RouterLink :to="{ name: 'profile' }" href="" class="header__nav-link">Профиль</RouterLink>
               <li><a href="#" @click="logout">Выйти</a></li>
             </ul>
             <div class="header__menu" @click="toggleMenu">
-              <img src="/images/header/burger.png" class="header__menu" alt="menu">
+              <img src="/images/header/burger.png" alt="menu">
             </div>
           </div>
         </div>
       </div>
+      <transition name="slide">
+      <div class="burger-menu" v-if="isMenuOpen">
+        <ul class="burger-menu__list">
+          <li class="burger-menu__item">Меню</li>
+          <li class="burger-menu__item">Каталог тренировок</li>
+          <li class="burger-menu__item">Каталог упражнений</li>
+          <li class="burger-menu__item">Видеоуроки</li>
+          <li class="burger-menu__item">Связь</li>
+          <li class="burger-menu__item">
+            <div class="burger-menu__item-profile">
+              <img src="/images/header/profile-logo.svg" alt="">
+            </div>
+          </li>
+          <li class="burger-menu__item">Личный кабинет</li>
+          <li class="burger-menu__item">Профиль</li>
+          <li class="burger-menu__item">Выход</li>
+        </ul>
+      </div>
+      </transition>
       <div class="header__phrase" @load="adjustContentPadding">
         <div class="container">
           <div class="header__phrase-text">
@@ -76,7 +99,7 @@ export default {
   name: 'App',
   data: () => ({
     mdiAccount,
-    isMenuOpen: false,
+    isMenuOpen: true,
   }),
   methods: {
     ...mapActions(['fetchPhrase']),
@@ -169,7 +192,7 @@ main:after {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 10000;
   font-family: "Roboto", sans-serif;
   font-size: 20px;
 
@@ -179,6 +202,7 @@ main:after {
   }
 
   &__inner {
+    z-index: 1000;
     padding: 0 12px;
 
     display: flex;
@@ -206,6 +230,7 @@ main:after {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+    cursor: pointer;
 
     @media (max-width: 768px) {
       display: block;
@@ -286,16 +311,16 @@ main:after {
 }
 
 .add__btn {
-  width: 100px; /* ширина кнопки равна 100px */
-  height: 100px; /* высота кнопки равна 100px */
+  width: 100px;
+  height: 100px;
   z-index: 1;
-  padding: 20px; /* отступ внутри кнопки равен 20px */
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  right: 40px; /* отступ справа равен 40px */
-  bottom: 40px; /* отступ снизу равен 40px */
+  right: 40px;
+  bottom: 40px;
   cursor: pointer;
   background: #D9D9D9;
   border-radius: 50%;
@@ -323,11 +348,15 @@ main:after {
 }
 
 .burger-menu {
-  padding: 0px 9px;
+  padding: 0 9px;
   position: fixed;
-  z-index: 100;
+  z-index: 10;
   width: 100%;
-
+  display: none;
+  transform-origin: top;
+  @media (max-width: 768px) {
+    display: block;
+  }
 
   &__list {
     list-style: none;
@@ -351,6 +380,7 @@ main:after {
       border-radius: 50%;
       height: 70px;
       width: 70px;
+      margin: 0 auto 20px;
       overflow: hidden;
 
       img {
@@ -424,5 +454,12 @@ main {
   @media (max-width: 768px) {
     transform: scaleY(0);
   }
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-enter-from, .slide-leave-to {
+  transform: scaleY(0);
 }
 </style>
