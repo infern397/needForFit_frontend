@@ -20,17 +20,29 @@
           </div>
           <nav class="header__nav">
             <ul class="header__nav-list">
-              <li class="header__nav-list-item"><a href="" class="header__nav-link">Меню</a></li>
-              <li class="header__nav-list-item"><a href="" class="header__nav-link">О нас</a></li>
+              <li class="header__nav-list-item">
+                <p class="header__nav-link">Меню</p>
+                <ul class="dropdown">
+                  <li><a href="#">Каталог&nbsp;тренировок</a></li>
+                  <li><a href="#">Каталог&nbsp;упражнений</a></li>
+                  <li><a href="#">Видеоуроки</a></li>
+                </ul>
+              </li>
+              <li class="header__nav-list-item"><a href="" class="header__nav-link">Личный кабинет</a></li>
               <li class="header__nav-list-item">
                 <RouterLink :to="{ name: 'contacts' }" href="" class="header__nav-link">Связь</RouterLink>
               </li>
             </ul>
           </nav>
           <div class="header__right">
-            <div class="header__profile" @click="$router.push({name: 'account', params: { id: 1 }})">
+            <div class="header__profile">
               <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
             </div>
+            <ul class="dropdown profile__dropdown">
+              <li><a href="#">Личный&nbsp;кабинет</a></li>
+              <li><a href="#">Профиль</a></li>
+              <li><a href="#" @click="logout">Выйти</a></li>
+            </ul>
             <div class="header__menu" @click="toggleMenu">
               <img src="/images/header/burger.png" class="header__menu" alt="menu">
             </div>
@@ -47,17 +59,6 @@
       </div>
     </header>
     <v-main class="position-relative">
-      <div class="burger-menu" v-if="isMenuOpen">
-        <ul class="burger-menu__list">
-          <li class="burger-menu__item">Меню</li>
-          <li class="burger-menu__item">О нас</li>
-          <li class="burger-menu__item">Связь</li>
-          <li class="burger-menu__item burger-menu__item-profile"
-              @click="$router.push({name: 'account'})">
-            <img src="/images/header/profile-logo.svg" class="" alt="profile">
-          </li>
-        </ul>
-      </div>
       <router-view></router-view>
     </v-main>
   </v-app>
@@ -189,6 +190,14 @@ main:after {
     }
   }
 
+  &__right {
+    position: relative;
+
+    @media (max-width: 425px) {
+      position: unset !important;
+    }
+  }
+
   &__menu {
     display: none;
     position: absolute;
@@ -196,7 +205,7 @@ main:after {
     top: 50%;
     transform: translateY(-50%);
 
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
       display: block;
     }
   }
@@ -234,12 +243,7 @@ main:after {
       text-decoration: none;
     }
 
-    @media (max-width: 769px) {
-      margin-left: unset;
-      margin-right: unset;
-    }
-
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
       display: none;
     }
   }
@@ -252,12 +256,13 @@ main:after {
     height: 46px;
     overflow: hidden;
 
-    @media (max-width: 425px) {
+    @media (max-width: 768px) {
       display: none;
     }
   }
 
   &__right {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -372,5 +377,50 @@ main {
 
 .swiper-pagination-bullet-active {
   background-color: #7C8685 !important;
+}
+
+.dropdown {
+  padding: 8px;
+  position: absolute;
+  list-style: none;
+  background-color: #7C8685;
+  border-top: 2px solid #00000033;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.header__nav-list-item {
+  position: relative;
+}
+
+.profile__dropdown {
+  bottom: -108px;
+  right: 0;
+}
+
+.dropdown {
+  padding: 8px;
+  position: absolute;
+  list-style: none;
+  background-color: #7C8685;
+  border-top: 2px solid #00000033;
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.header__nav-list-item:hover .dropdown {
+  transform: scaleY(1);
+}
+
+.header__right:hover .dropdown {
+  transform: scaleY(1);
+
+  @media (max-width: 768px) {
+    transform: scaleY(0);
+  }
 }
 </style>
