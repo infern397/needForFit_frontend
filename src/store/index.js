@@ -5,6 +5,7 @@ import categories from './modules/categories';
 import exercises from './modules/exercises';
 import workout from './modules/workout';
 import phrases from './modules/phrases';
+import users from './modules/users';
 
 export default new Vuex.Store({
     modules: {
@@ -13,5 +14,6 @@ export default new Vuex.Store({
         exercises,
         workout,
         phrases,
+        users,
     }
 });

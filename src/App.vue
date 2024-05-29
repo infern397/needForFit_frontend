@@ -35,7 +35,9 @@
             </ul>
           </nav>
           <div class="header__right">
-            <div class="header__profile">
+            <div class="header__profile"
+                 @click="$router.push({name: 'account'})"
+            >
               <img src="/images/header/profile-logo.svg" class="header__profile-icon" alt="profile">
             </div>
             <ul class="dropdown profile__dropdown">

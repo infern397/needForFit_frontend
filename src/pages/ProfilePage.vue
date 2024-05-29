@@ -5,10 +5,11 @@
     </div>
     <div class="profile__inner">
       <div class="profile__left">
-        <img src="/images/profile/Авторизация.png" alt="" class="profile__img">
+        <img :src="'http://' + user.profile_picture" alt="" class="profile__img">
         <div class="profile__left-btns">
-          <button class="profile__left-btn">Загрузить фото</button>
-          <button class="profile__left-btn">Удалить фото</button>
+          <input type="file" @change="onFileChange" class="profile__left-input" ref="fileInput" style="display: none">
+          <button class="profile__left-btn" @click="onButtonClick">Загрузить фото</button>
+          <button class="profile__left-btn" @click="deleteAva">Удалить фото</button>
         </div>
       </div>
       <div class="profile__right">
@@ -16,33 +17,51 @@
         <div class="profile__data">
           <div class="profile__form">
             <label for="" class="profile__label">Логин
-              <input type="text" class="profile__input">
-
+              <input type="text" class="profile__input" v-model="newLogin" @input="v$.newLogin.$touch" autocomplete="new-password">
+              <span v-if="v$.newLogin.$dirty">
+                <span v-if="v$.newLogin.required.$invalid" class="error">Поле обязательно для заполнения</span>
+                <span v-if="v$.newLogin.minLength.$invalid" class="error">Логин должен быть не менее 3 символов</span>
+              </span>
             </label>
             <div class="profile__btns">
-              <button class="profile__btn">
+              <button class="profile__btn" @click="updateLog">
                 <img src="/images/profile/Vector.png" alt="Сохранить">
               </button>
-              <button class="profile__btn">
+              <button class="profile__btn" @click="resetLogin">
                 <img src="/images/profile/Vector-1.png" alt="Отменить">
               </button>
             </div>
           </div>
           <div class="profile__form">
             <label for="" class="profile__label">Старый пароль
-              <input type="text" class="profile__input">
+              <input type="password" class="profile__input" v-model="oldPassword" @input="v$.oldPassword.$touch" autocomplete="new-password">
+              <span v-if="v$.oldPassword.$dirty">
+                <span v-if="v$.oldPassword.required.$invalid"
+                      class="error">Поле обязательно для заполнения</span>
+                <span v-if="v$.oldPassword.minLength.$invalid" class="error">
+                  Пароль должен быть не менее 8 символов
+                </span>
+              </span>
             </label>
             <label for="" class="profile__label">Новый пароль
-              <input type="text" class="profile__input">
+              <input type="password" class="profile__input" v-model="newPassword" @input="v$.newPassword.$touch" autocomplete="new-password">
+              <span v-if="v$.newPassword.$dirty">
+                <span v-if="v$.newPassword.required.$invalid"
+                      class="error">Поле обязательно для заполнения</span>
+                <span v-if="v$.newPassword.minLength.$invalid" class="error">
+                  Пароль должен быть не менее 8 символов
+                </span>
+              </span>
             </label>
             <label for="" class="profile__label">Подтвердите новый пароль
-              <input type="text" class="profile__input">
+              <input type="password" class="profile__input" v-model="confirmedPassword" @input="v$.confirmedPassword.$touch" autocomplete="new-password">
+              <span v-if="v$.confirmedPassword.$error" class="error">Пароли не совпадают</span>
             </label>
             <div class="profile__btns">
-              <button class="profile__btn">
+              <button class="profile__btn" @click="updatePas">
                 <img src="/images/profile/Vector.png" alt="Сохранить">
               </button>
-              <button class="profile__btn">
+              <button class="profile__btn" @click="resetPassword">
                 <img src="/images/profile/Vector-1.png" alt="Отменить">
               </button>
             </div>
@@ -54,8 +73,65 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex';
+import {required, minLength, sameAs} from '@vuelidate/validators'
+import {useVuelidate} from "@vuelidate/core/dist";
+
+
 export default {
-  name: "ProfilePage"
+  name: "ProfilePage",
+  data() {
+    return {
+      newLogin: '',
+      oldPassword: '',
+      newPassword: '',
+      confirmedPassword: ''
+    }
+  },
+  computed: {
+    ...mapGetters(['user'])
+  },
+  methods: {
+    ...mapActions(['fetchUser', 'updateLogin', 'updatePassword', 'updateAvatar', 'deleteAvatar']),
+    updateLog() {
+      this.updateLogin({newLogin: this.newLogin});
+    },
+    updatePas() {
+      this.updatePassword({oldPassword: this.oldPassword, newPassword: this.newPassword});
+    },
+    onFileChange(e) {
+      this.updateAvatar(e.target.files[0]);
+    },
+    onButtonClick() {
+      this.$refs.fileInput.click();
+    },
+    deleteAva() {
+      this.deleteAvatar();
+    },
+    resetLogin() {
+
+      this.newLogin = this.user.username;
+    },
+    resetPassword() {
+      this.oldPassword = '';
+      this.newPassword = '';
+      this.confirmedPassword = '';
+    },
+  },
+  validations() {
+    return {
+      oldPassword: {required, minLength: minLength(8)},
+      newPassword: {required, minLength: minLength(8)},
+      confirmedPassword: { required, sameAs: sameAs('newPassword') },
+      newLogin: { required, minLength: minLength(3) },
+    }
+  },
+  created() {
+    this.fetchUser()
+  },
+  setup() {
+    return {v$: useVuelidate()}
+  },
 }
 </script>
 
@@ -114,6 +190,7 @@ export default {
 
   &__img {
     border-radius: 10px;
+    object-fit: cover;
 
     @media (max-width: 768px) {
       max-height: 150px;
