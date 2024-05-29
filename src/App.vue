@@ -40,7 +40,7 @@
             </div>
             <ul class="dropdown profile__dropdown">
               <li><a href="#">Личный&nbsp;кабинет</a></li>
-              <li><a href="#">Профиль</a></li>
+              <RouterLink :to="{ name: 'profile' }" href="" class="header__nav-link">Профиль</RouterLink>
               <li><a href="#" @click="logout">Выйти</a></li>
             </ul>
             <div class="header__menu" @click="toggleMenu">

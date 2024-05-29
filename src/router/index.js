@@ -6,6 +6,7 @@ import AccountPage from "@/pages/AccountPage";
 import LoginPage from "@/pages/LoginPage";
 import RegistrationPage from "@/pages/RegistrationPage";
 import ContactsPage from "@/pages/ContactsPage";
+import ProfilePage from "@/pages/ProfilePage";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: '/contacts',
     name: 'contacts',
     component: ContactsPage
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfilePage
   },
 ]
 
